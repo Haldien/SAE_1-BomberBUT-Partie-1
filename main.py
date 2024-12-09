@@ -1,19 +1,8 @@
-
 from bomber import *
 from fantomes import *
 from bombes import *
-
-"""
-Fonctions utiles
-"""
-def case_valide(grille, y: int, x: int) -> bool:
-    if not (0 <= y <= len(grille) - 1 and 0 <= x <= len(grille[0]) - 1):
-        return False
-    for el in ["M", "C", "E", "F", "P"]:
-        if el in grille[y][x]:
-            return False
-    return True
-
+from timers import *
+from fonctions_utiles import *
 
 
 """
@@ -61,13 +50,18 @@ def faire_apparaitre_fantomes():
     pass
 
 
-def updater_timers():
-    pass
+def updater_timers(dic_bombes):
+    updater_timers_bombes(dic_bombes)
 
 
-def explosions():
-    pass
+def explosions(grille, dic_bombes):
 
+
+    for key in list(dic_bombes.keys()): # list() évite RuntimeError: dictionary changed size during iteration
+        # timer écoulé :
+        if dic_bombes[key] == 0:
+            exploser_bombe(grille, key)
+            dic_bombes.pop(key)
 
 
 """
@@ -81,7 +75,7 @@ def main(grille, g, dic_bombes):
         print("-----------------------------")
         for el in grille:
             print(el)
-        #print("dic_bombes:", dic_bombes)
+        print("dic_bombes:", dic_bombes)
 
         touche = g.attendreTouche()
 
@@ -104,8 +98,8 @@ def main(grille, g, dic_bombes):
 
             faire_apparaitre_fantomes()
 
-            updater_timers()
+            updater_timers(dic_bombes)
 
-            explosions()
+            explosions(grille, dic_bombes)
 
             # render()
