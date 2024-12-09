@@ -52,28 +52,29 @@ def updater_timers(dic_bombes):
     updater_timers_bombes(dic_bombes)
 
 
-def explosions(grille, dic_bombes):
+
+def explosions(grille, dic_bombes, dic_bomber):
 
     # Vérifie le timer de chaque bombe
     for key in list(dic_bombes.keys()): # list() évite RuntimeError: dictionary changed size during iteration
         # timer écoulé :
         if dic_bombes[key] == 0:
-            exploser_bombe(grille, key)
+            exploser_bombe(grille, key, dic_bomber)
             dic_bombes.pop(key)
 
 
 """
 MAIN
 """
-def main(grille, g, dic_bombes):
-
+def main(grille, g, dic_bombes, dic_bomber):
     while True:
 
-        # affichage de la grille dans le terminal pour test
+        # affichage dans le terminal pour les tests
         print("-----------------------------")
         for el in grille:
             print(el)
         print("dic_bombes:", dic_bombes)
+        print("dic_bomber:", dic_bomber)
 
         touche = g.attendreTouche()
 
@@ -98,6 +99,6 @@ def main(grille, g, dic_bombes):
 
             updater_timers(dic_bombes)
 
-            explosions(grille, dic_bombes)
+            explosions(grille, dic_bombes, dic_bomber)
 
             # render()
