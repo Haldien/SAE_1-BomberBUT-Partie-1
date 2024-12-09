@@ -6,7 +6,6 @@ from main import *
 
 g = tkiteasy.ouvrirFenetre(400, 400)  # taille à changer
 
-# grille est une liste, pas besoin de global
 # grille : list[list[list[str]]]
 grille = [
     [["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"]],
