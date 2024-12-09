@@ -18,7 +18,7 @@ dic_bombes = {}
 
 dic_bomber = {
     "PV":3,
-    "Niv":1,
+    "Niv":0,
     "Score":0
 }
 
