@@ -54,7 +54,7 @@ def updater_timers(dic_bombes):
 
 def explosions(grille, dic_bombes):
 
-    # Vérifie le timers de chaque bombe
+    # Vérifie le timer de chaque bombe
     for key in list(dic_bombes.keys()): # list() évite RuntimeError: dictionary changed size during iteration
         # timer écoulé :
         if dic_bombes[key] == 0:
