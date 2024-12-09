@@ -1,7 +1,7 @@
 import tkiteasy
 
 #  PV : pv du bomber, NIV : niveau fdu bomber, pos_bomber : list[int], [y_bomber, x_bomber], soit : y_bomber = indice de ligne, x_bomber : indice de colonne
-global PV, niv, pos_bomber
+global PV, niv
 
 g = tkiteasy.ouvrirFenetre(400, 400)  # taille à changer
 
@@ -17,6 +17,13 @@ grille = [
 
 # Fonctions annexes
 
+def pos_bomber(grille:list[list[list[str]]])->list[int]:
+    for y in range(len(grille)):
+        for x in range(len(grille[0])):
+            if "P" in grille[y][x]:
+                return [y, x]
+
+    # Mouvements
 def case_valide(y: int, x: int) -> bool:
     if not (0 <= y <= len(grille) - 1 and 0 <= x <= len(grille[0]) - 1):
         return False
@@ -27,16 +34,16 @@ def case_valide(y: int, x: int) -> bool:
 
 def deplacer_bomber(y: int, x: int):
 
-    global pos_bomber
+    pos = pos_bomber(grille)
 
     if grille[y][x] == "U":
         pass
 
-    grille[pos_bomber[0]][pos_bomber[1]].remove("P")
+    grille[pos_bomber(grille)[0]][pos_bomber(grille)[1]].remove("P")
     grille[y][x].append("P")
 
-    pos_bomber = [y, x]
 
+    # Pose de bomber
 def poser_bombe(y:int, x:int):
     if "B" not in grille[y][x] :
         grille[y][x].append("B")
@@ -47,7 +54,6 @@ def poser_bombe(y:int, x:int):
 
 def action_bomber(touche: str):
 
-    global pos_bomber
 
     # Mappings des touches vers les vecteurs de mouvements correspondant
     mouvements = {
@@ -58,16 +64,16 @@ def action_bomber(touche: str):
     }
 
     # Mouvements
-    if touche in ["z", "q", "s", "d"] and case_valide(pos_bomber[0] + mouvements[touche][0], pos_bomber[1] + mouvements[touche][1]):
+    if touche in ["z", "q", "s", "d"] and case_valide(pos_bomber(grille)[0] + mouvements[touche][0], pos_bomber(grille)[1] + mouvements[touche][1]):
 
         # Jusqu'à ce que le mouvement correspondant soit valide
 
-        deplacer_bomber(pos_bomber[0] + mouvements[touche][0], pos_bomber[1] + mouvements[touche][1])
+        deplacer_bomber(pos_bomber(grille)[0] + mouvements[touche][0], pos_bomber(grille)[1] + mouvements[touche][1])
 
 
     # Dépose un bombe
     elif touche == "space":
-        poser_bombe(pos_bomber[0], pos_bomber[1])
+        poser_bombe(pos_bomber(grille)[0], pos_bomber(grille)[1])
 
     # Passe son tour
     elif touche == "Return":
@@ -100,11 +106,6 @@ def explosions():
 
 def main():
 
-    global pos_bomber
-    for y in range(len(grille)):
-        for x in range(len(grille[0])):
-            if "P" in grille[y][x] :
-                pos_bomber = [y, x]
 
 
     while True:
