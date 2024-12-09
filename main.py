@@ -21,8 +21,6 @@ def action_bomber(grille, touche: str, dic_bombes):
     # Mouvements
     if touche in ["z", "q", "s", "d"] and case_valide(grille, pos_bomber(grille)[0] + mouvements[touche][0], pos_bomber(grille)[1] + mouvements[touche][1]):
 
-        # Jusqu'à ce que le mouvement correspondant soit valide
-
         deplacer_bomber(grille, pos_bomber(grille)[0] + mouvements[touche][0], pos_bomber(grille)[1] + mouvements[touche][1])
 
 
