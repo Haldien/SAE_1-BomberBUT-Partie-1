@@ -1,7 +1,6 @@
 import tkiteasy
 
-#  PV : pv du bomber, NIV : niveau fdu bomber, pos_bomber : list[int], [y_bomber, x_bomber], soit : y_bomber = indice de ligne, x_bomber : indice de colonne
-global PV, niv
+#  PV : pv du bomber, NIV : niveau du bomber
 
 g = tkiteasy.ouvrirFenetre(400, 400)  # taille à changer
 
@@ -14,6 +13,10 @@ grille = [
     [["C"], ["M"], ["M"], ["M"], ["M"], [   ], ["E"], [   ], ["C"]],
     [["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"]]
 ]
+
+dic_bombes = {}
+
+
 
 # Fonctions annexes
 
@@ -43,11 +46,16 @@ def deplacer_bomber(y: int, x: int):
     grille[y][x].append("P")
 
 
-    # Pose de bomber
+    # Pose de bombe
 def poser_bombe(y:int, x:int):
     if "B" not in grille[y][x] :
         grille[y][x].append("B")
-        # créer entité bombe avec son timer
+        ajouter_à_dic_bombes(y ,x)
+
+def ajouter_à_dic_bombes(y, x):
+    global dic_bombes
+
+    dic_bombes[(y, x)] = 5
 
 
 # Fonctions principales
@@ -114,6 +122,7 @@ def main():
         print("-----------------------------")
         for el in grille:
             print(el)
+        print("dic_bombes:", dic_bombes)
 
         touche = g.attendreTouche()
 
