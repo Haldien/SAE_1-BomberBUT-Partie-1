@@ -18,6 +18,8 @@ def exploser_bombe(grille, coord, niv=None):# niv = None à changer
         if 0 <= coord_explosion[0] <= len(grille) - 1 and 0 <=  coord_explosion[1] <= len(grille[0]) - 1:
             if "M" in grille[coord_explosion[0]][coord_explosion[1]]:
                 grille[coord_explosion[0]][coord_explosion[1]].remove("M")
+            if "P" in grille[coord_explosion[0]][coord_explosion[1]]:
+                pass # à voir
 
     # Supprime la bombe
     grille[coord[0]][coord[1]].remove("B")
