@@ -104,7 +104,6 @@ def calculer_cases_affectees(grille, coord, dic_bomber) -> dict[str:list[tuple[i
             else:
                 dic_cases_affectees_relatives[direction].append(propagee)
 
-    print(cases_relatives_vers_absolues(coord, dic_cases_affectees_relatives))
     return cases_relatives_vers_absolues(coord, dic_cases_affectees_relatives)
 
 
