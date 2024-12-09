@@ -1,4 +1,5 @@
 from random import randint
+from fonctions_utiles import *
 
 #Format Liste Fantome, tuple
 
