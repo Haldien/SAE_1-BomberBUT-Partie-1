@@ -52,57 +52,35 @@ def calculer_cases_affectees(grille, coord, dic_bomber) -> dict[str:list[tuple[i
         "gauche":[]
     }
 
+    dic_vecteurs = {
+        "haut": (-1, 0),
+        "droite": (0, 1),
+        "bas": (1, 0),
+        "gauche": (0, -1)
+    }
+
     directions_valides = list(dic_cases_affectees_relatives.keys())
 
-    # Pour les 4 cases adjacentes
-    if case_valide_pour_explosion(grille, coord[0]-1, coord[1]):
-        dic_cases_affectees_relatives["haut"].append((-1, 0))
-        if "M" in grille[coord[0]-1][coord[1]]:
-            directions_valides.remove("haut") # Le mur est détruit mais l'explosion s'arrête là
-    else:
-        directions_valides.remove("haut")
+    for k in range(1, portee+1):
 
-    if case_valide_pour_explosion(grille, coord[0], coord[1]+1):
-        dic_cases_affectees_relatives["droite"].append((0, 1))
-        if "M" in grille[coord[0]][coord[1]+1]:
-            directions_valides.remove("droite") # Le mur est détruit mais l'explosion s'arrête là
-    else:
-        directions_valides.remove("droite")
-
-    if case_valide_pour_explosion(grille, coord[0]+1, coord[1]):
-        dic_cases_affectees_relatives["bas"].append((1, 0))
-        if "M" in grille[coord[0]+1][coord[1]]:
-            directions_valides.remove("bas") # Le mur est détruit mais l'explosion s'arrête là
-    else:
-        directions_valides.remove("bas")
-
-    if case_valide_pour_explosion(grille, coord[0], coord[1]-1):
-        dic_cases_affectees_relatives["gauche"].append((0, -1))
-        if "M" in grille[coord[0]][coord[1]-1]:
-            directions_valides.remove("gauche") # Le mur est détruit mais l'explosion s'arrête là
-    else:
-        directions_valides.remove("gauche")
-
-
-    if portee == 1:
-        return dic_cases_affectees_relatives
-
-
-    # Généralisation aux cases plus lointaines si la portée le permet
-    for i in range(2, portee+1):
         for direction in directions_valides:
-            # i sert comme un scalaire pour les 4 vecteurs donnant les directions à l'explosion
-            propagee = (dic_cases_affectees_relatives[direction][-1][0]*i, dic_cases_affectees_relatives[direction][-1][1]*i)
+
+            # k sert comme un scalaire pour les 4 vecteurs donnant les directions à l'explosion
+            propagee = (dic_vecteurs[direction][0]*k, dic_vecteurs[direction][1]*k)
+
             # pour passer de coordonnées relatives à absolues : coord[0]+el[0], coord[1]+el[1]. coord sont les coordonnées absolues du point à partir desquelles les coordonnées relatives de el sont basées. L'addition des deux donnent les coordonnées absolues de el, càd dans la grille plutôt que par rapport au point de coordonnées coord, càd la bombe
             if not case_valide_pour_explosion(grille, coord[0]+propagee[0], coord[1]+propagee[1]):
                 directions_valides.remove(direction)
-                # On a rencontré une colonne : la direction n'est plus valide
+                # On a rencontré une colonne ou on est en dehors de la grille : la direction n'est plus valide
+
             elif "M" in grille[coord[0]+propagee[0]][coord[1]+propagee[1]]:
                 dic_cases_affectees_relatives[direction].append(propagee)
                 directions_valides.remove(direction)
                 # Le mur est détruit mais l'explosion s'arrête là
+
             else:
                 dic_cases_affectees_relatives[direction].append(propagee)
+                # Tout autre élément
 
     return cases_relatives_vers_absolues(coord, dic_cases_affectees_relatives)
 
@@ -137,9 +115,11 @@ def exploser_bombe(grille, coord, dic_bomber):  # niv = None à changer
             if "F" in grille[coord_explosion[0]][coord_explosion[1]]:
                 pass
             if "B" in grille[coord_explosion[0]][coord_explosion[1]]:
-                pass
+                coord_suivante = (coord_explosion[0], coord_explosion[1])
+                exploser_bombe(grille, coord_suivante, dic_bomber)
             if "U" in grille[coord_explosion[0]][coord_explosion[1]]:
                 pass
 
     # Supprime la bombe
     grille[coord[0]][coord[1]].remove("B")
+
