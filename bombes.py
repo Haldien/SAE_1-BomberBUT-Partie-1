@@ -5,7 +5,7 @@ def poser_bombe(grille, dic_bombes, y: int, x: int):
 
 
 def ajouter_a_dic_bombes(dic_bombes, y, x):
-    dic_bombes[(y, x)] = 5
+    dic_bombes[(y, x)] = 6
 
 
 
