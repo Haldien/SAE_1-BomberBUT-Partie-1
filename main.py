@@ -56,17 +56,18 @@ def updater_timers(dic_bombes):
 def explosions(grille, dic_bombes, dic_bomber):
 
     # Vérifie le timer de chaque bombe
-    for key in list(dic_bombes.keys()): # list() évite RuntimeError: dictionary changed size during iteration
-        # timer écoulé :
-        if dic_bombes[key] == 0:
-            exploser_bombe(grille, key, dic_bomber)
-            dic_bombes.pop(key)
+    a_exploser = [coord for coord in dic_bombes if dic_bombes[coord] == 0]
+
+    for coord in a_exploser:
+        exploser_bombe(grille, coord, dic_bombes, dic_bomber)
+
 
 
 """
 MAIN
 """
 def main(grille, g, dic_bombes, dic_bomber):
+
     while True:
 
         # affichage dans le terminal pour les tests
