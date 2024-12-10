@@ -89,7 +89,7 @@ def exploser_bombe(grille, coord, dic_bombes, dic_bomber):
 
     # Supprime la bombe du dic. Doit être ici et pas dans explosions() pour la récursion
     dic_bombes.pop(coord)
-    # Supprime la réprésentation bombe de la grille
+    # Supprime la réprésentation de la bombe de la grille
     grille[coord[0]][coord[1]].remove("B")
 
     for direction in dic_cases_affectees.keys():
