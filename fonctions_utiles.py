@@ -1,13 +1,17 @@
-
 # Valables pour le bomberman et les fantomes mais pas pour les bombes
-def case_valide(grille, y: int, x: int) -> bool:
+def case_valide(grille: list, y: int, x: int) -> bool:
+    """
+        Cette fonction prend en paramètre,
+        une grille de jeu, des coordonnées x et y
+
+        Elle renvoie False si la case n'est pas valide et True si elle est valide
+    """
     if not (0 <= y <= len(grille) - 1 and 0 <= x <= len(grille[0]) - 1):
         return False
     for el in ["M", "C", "E", "F", "P"]:
         if el in grille[y][x]:
             return False
     return True
-
 
 def createMap(nomMap:str) -> list:
     """
