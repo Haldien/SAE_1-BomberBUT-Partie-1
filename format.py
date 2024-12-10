@@ -18,9 +18,10 @@ def createMap(nomMap:str) -> list:
     for i in mapText.read().split("\n")[3:]:
         row = []
         for j in i:
-            row += [[j]]
+            if j == ' ':
+                row += [ [ ] ]
+            else:
+                row += [[j]]
         map += [row]
     
     return map
-
-createMap("map0")
