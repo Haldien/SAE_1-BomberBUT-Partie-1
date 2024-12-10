@@ -53,13 +53,13 @@ def updater_timers(dic_bombes):
 
 
 
-def explosions(grille, dic_bombes, dic_bomber):
+def explosions(grille, dic_bombes, dic_bomber, dic_fantome):
 
     # Vérifie le timer de chaque bombe
     a_exploser = [coord for coord in dic_bombes if dic_bombes[coord] == 0]
 
     for coord in a_exploser:
-        exploser_bombe(grille, coord, dic_bombes, dic_bomber)
+        exploser_bombe(grille, coord, dic_bombes, dic_bomber, dic_fantome)
 
 
 
@@ -81,8 +81,8 @@ def main(grille, g, dic_bombes, dic_bomber, dic_fantome, dic_ethernet, settings)
         print("dic_bombes:", dic_bombes)
         print("dic_bomber:", dic_bomber)
 
-        print("dic_fantome:", len(dic_fantome))
-        print("dic_ethernet:", len(dic_ethernet))
+        print("dic_fantome:", dic_fantome)
+        print("dic_ethernet:", dic_ethernet)
         print(f"TIMER : {OnGameSettings['timer']}              TIMERFANTOME : {OnGameSettings['timerfantome']}")
 
         touche = g.attendreTouche()
@@ -102,7 +102,7 @@ def main(grille, g, dic_bombes, dic_bomber, dic_fantome, dic_ethernet, settings)
             
             updater_timers(dic_bombes)
 
-            explosions(grille, dic_bombes, dic_bomber)
+            explosions(grille, dic_bombes, dic_bomber, dic_fantome)
 
         if OnGameSettings["timerfantome"] == 0:
             apparition_fantomes(grille,dic_fantome,dic_ethernet)
