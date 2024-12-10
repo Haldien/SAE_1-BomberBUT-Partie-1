@@ -28,7 +28,7 @@ grille = [
     les Dictionnaires
 """
 dic_fantome = {}
-dic_prise = { "E" : []}
+dic_prise = { "E" : [(3,6)]}
 
 dic_bombes = {}
 dic_bomber = {
