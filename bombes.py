@@ -18,7 +18,7 @@ def case_valide_pour_explosion(grille, y, x)->bool:
 def cases_relatives_vers_absolues(coord, dic_cases_affectees_relatives):
 
     dic_cases_affectees_absolues = {
-        "haut":[],
+        "haut":[(0, 0)], # case de la bombe elle-même
         "droite":[],
         "bas":[],
         "gauche":[]
