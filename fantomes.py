@@ -1,6 +1,5 @@
 from random import randint, shuffle
 from fonctions_utiles import *
-
 from format import createMap
 
 #Format Liste Fantome, tuple les prises sont bloquantes
@@ -22,7 +21,6 @@ def deplacerFantomes(grille:list, entite:dict) -> None:
             entite[fantome][1] = (xPos, yPos)
 
     return
-
 
 def getPosPossible(grille:list, pos:tuple, entite) -> list:
     """
@@ -82,13 +80,6 @@ def apparition_fantomes(grille:list, entite: dict, prise: dict) -> None:
     globalData += 1
     entite[newEntity] = ["objetGraphique", (caseDisponible[0][0],caseDisponible[0][1])]
     grille[caseDisponible[0][0]][caseDisponible[0][1]] += [newEntity]
-    
-    
-    
-
-    
-
-
 
 def getPriseEthernet(grille:list) -> list :
     """
@@ -103,24 +94,58 @@ def getPriseEthernet(grille:list) -> list :
                     prise += [(i,j)]
     return prise
 
-def attaque_fantome(grille:list,playerPos:list, entite:list) -> None:
-    pass
+"""
+    L'attaque des fantômes faudra voir quand on fera l'intéraction avec les autres objets
+"""
+
+def attaque_fantome(grille:list,playerPos:tuple, entite:dict) -> None:
+    """
+        Note au développeur: Le player pos peut directement évoluer avec le dico bomber 
+
+        Cette fontion prend en paramètre une grille de jeu, le couple de coordonnée du joueur et les entités 
+
+        Elle permet d'appliquer des dégâts au bomber si un fantôme se situe dans la case adjacente à celui ci.
+
+        Elle ne renvoie rien
+    """
+    for fantome in entite:
+        xFantome, yFantome = entite[fantome][1]
+        xBomber, yBomber = playerPos
+        if xBomber + 1 == xFantome or xBomber - 1 == xFantome \
+            or yBomber + 1 == yFantome or yBomber -1 == yFantome:
+                print("Un fantôme a touché le joueur")
+                """
+                    Faudra aussi faire des tours d'invulnérabilité au cas où la RNG est éclaté
+                """
+        else:
+            print("rien ne se passe")
+
+    return
+
+"""
+    C'est une fonction juste pour mieux voir ce qu'on travail
+"""
+def displayMap(map:list):
+    print("-----------------------------")
+    print("Nouvelle Map")
+
+    print("-----------------------------")
+
+    for index, row in enumerate(map):
+        print(index, row)
+    print("-----------------------------")
 
 
-fantomes = {
-    "F1" : ["objetGraphique", (1,2)]
-}
+fantomes = {}
 
 prise = {
     "E" : []
 }
 
-globalData = 0
+globalData = 0 # Cette variable va vite dégager, c'est pour compter le numéro du fantôme lorsqu'il va être crée
 
 
 #print(createMap("map0"))
-
-
 maptest = [
     [["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"]],
     [["C"], [   ], [   ], [   ], [   ], [   ], [   ], [   ], ["C"]],
@@ -130,13 +155,11 @@ maptest = [
 ]
 
 prise["E"] = getPriseEthernet(maptest)
-print(maptest)
+displayMap(maptest)
+attaque_fantome(maptest, (1,6), fantomes)
 apparition_fantomes(maptest,fantomes, prise )
+displayMap(maptest)
+attaque_fantome(maptest, (1,6), fantomes)
 apparition_fantomes(maptest,fantomes, prise )
-
-print(maptest)
-
-
-
-
-
+displayMap(maptest)
+attaque_fantome(maptest, (1,6), fantomes)
