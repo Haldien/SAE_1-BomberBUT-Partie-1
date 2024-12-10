@@ -1,5 +1,6 @@
 from random import randint, shuffle
 from fonctions_utiles import *
+
 from format import createMap
 
 #Format Liste Fantome, tuple les prises sont bloquantes
@@ -16,11 +17,12 @@ def deplacerFantomes(grille:list, entite:dict) -> None:
         if posPossible != []:
 
             xPos, yPos = posPossible[0]
-            grille[ entite[fantome][1][0] ][ entite[fantome][1][1] ].remove("fantome1")
+            grille[ entite[fantome][1][0] ][ entite[fantome][1][1] ].remove(fantome)
             grille[xPos][yPos] += [fantome]
             entite[fantome][1] = (xPos, yPos)
 
     return
+
 
 def getPosPossible(grille:list, pos:tuple, entite) -> list:
     """
@@ -63,7 +65,7 @@ def apparition_fantomes(grille:list, entite: dict, prise: dict) -> None:
     }
     La taille du dictionnaire correspond aux nombres de fantômes présents dans la partie actuelle.
     """
-    global globalData
+    global globalData ## > Cette donnée va être remplacer plus tard pour un truc plus propre
     posPrise = prise["E"]
     shuffle(posPrise)
     pos = posPrise[0]
@@ -71,7 +73,6 @@ def apparition_fantomes(grille:list, entite: dict, prise: dict) -> None:
     caseDisponible = getPosPossible(grille, pos, entite)
     print
     if caseDisponible == []: # Si la liste est vide on stop la fonction
-        print("plus de place")
         return
     print(caseDisponible)
     
@@ -80,7 +81,8 @@ def apparition_fantomes(grille:list, entite: dict, prise: dict) -> None:
     globalData += 1
     entite[newEntity] = ["objetGraphique", (caseDisponible[0][0],caseDisponible[0][1])]
     grille[caseDisponible[0][0]][caseDisponible[0][1]] += [newEntity]
-
+    
+    
 def getPriseEthernet(grille:list) -> list :
     """
     Cette fonction prend en paramètre une grille et retourne tout les spaw.. les prises ethernet du niveau
@@ -93,10 +95,6 @@ def getPriseEthernet(grille:list) -> list :
                 if el == "E":
                     prise += [(i,j)]
     return prise
-
-"""
-    L'attaque des fantômes faudra voir quand on fera l'intéraction avec les autres objets
-"""
 
 def attaque_fantome(grille:list,playerPos:tuple, entite:dict) -> None:
     """
@@ -122,44 +120,11 @@ def attaque_fantome(grille:list,playerPos:tuple, entite:dict) -> None:
 
     return
 
-"""
-    C'est une fonction juste pour mieux voir ce qu'on travail
-"""
-def displayMap(map:list):
-    print("-----------------------------")
-    print("Nouvelle Map")
 
-    print("-----------------------------")
-
-    for index, row in enumerate(map):
-        print(index, row)
-    print("-----------------------------")
-
-
-fantomes = {}
+fantomes = { }
 
 prise = {
-    "E" : []
-}
+    "E" : []}
 
-globalData = 0 # Cette variable va vite dégager, c'est pour compter le numéro du fantôme lorsqu'il va être crée
+globalData = 0
 
-
-#print(createMap("map0"))
-maptest = [
-    [["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"]],
-    [["C"], [   ], [   ], [   ], [   ], [   ], [   ], [   ], ["C"]],
-    [["C"], ["M"], ["C"], ["M"], ["C"], ["M"], ["C"], ["M"], ["C"]],
-    [["C"], ["M"], ["M"], ["M"], ["M"], [   ], ["E"], [   ], ["C"]],
-    [["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"]]
-]
-
-prise["E"] = getPriseEthernet(maptest)
-displayMap(maptest)
-attaque_fantome(maptest, (1,6), fantomes)
-apparition_fantomes(maptest,fantomes, prise )
-displayMap(maptest)
-attaque_fantome(maptest, (1,6), fantomes)
-apparition_fantomes(maptest,fantomes, prise )
-displayMap(maptest)
-attaque_fantome(maptest, (1,6), fantomes)
