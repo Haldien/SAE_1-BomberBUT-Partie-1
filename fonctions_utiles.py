@@ -51,3 +51,23 @@ def affichage_grille(grille):
             elif len(case) == 2:
                 print(f"{case}", end = " ")
         print("\n")
+
+def getObjectPosition(grille:list, cible:str) -> list:
+    """
+    Cette fonction permet de chercher un objet particulier dans une grille
+    str cible 
+        - P, le bomber  
+        - E, la prise Ethernet -
+        - M, Mur
+        - C, une colonne
+        - F, si des fantômes sont déjà existant dans le bâtiment Bastier
+    """
+    recherche = []
+    for x in range(grille):
+        for y in range(grille[0]):
+            for el in grille[x][y]:
+                if cible in el:
+                    recherche += [(x,y)]   
+    return recherche
+
+# Il y a peut être un moyen qu'on fasse une fonction qui récupère tout d'un coup
