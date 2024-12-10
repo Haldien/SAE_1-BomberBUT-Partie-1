@@ -39,3 +39,15 @@ def createMap(nomMap:str) -> list:
         map += [row]
     
     return map
+
+def affichage_grille(grille):
+    print("----------------------------")
+    for line in grille:
+        for case in line:
+            if len(case) == 0:
+                print("          ", end = " ")
+            elif len(case) == 1:
+                print(f"  {case}   ", end = " ")
+            elif len(case) == 2:
+                print(f"{case}", end = " ")
+        print("\n")
