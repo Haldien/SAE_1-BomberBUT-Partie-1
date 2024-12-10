@@ -14,8 +14,11 @@ grille = [
     [["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"]]
 ]
 
-dic_bombes = {}
 
+dic_fantome = {}
+dic_prise = { "E" : []}
+
+dic_bombes = {}
 dic_bomber = {
     "PV":3,
     "Niv":0,
@@ -24,5 +27,10 @@ dic_bomber = {
 
 # timer global = 100; comment gérer sans 'global' ?
 
+"""
+    Faudrait que dans la fonction main, avant l'appel de la boucle énorme on est une première definition du timer
+    du style un int, ou même une variable dans un dico
+    Et comme ça à chaque appel de boucle on fait en sorte que le timer se modifie
+"""
 
 main(grille, g, dic_bombes, dic_bomber)
