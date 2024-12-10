@@ -70,9 +70,7 @@ def main(grille, g, dic_bombes, dic_bomber):
     while True:
 
         # affichage dans le terminal pour les tests
-        print("-----------------------------")
-        for el in grille:
-            print(el)
+        affichage_grille(grille)
         print("dic_bombes:", dic_bombes)
         print("dic_bomber:", dic_bomber)
 
