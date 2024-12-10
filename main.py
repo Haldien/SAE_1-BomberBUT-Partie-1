@@ -66,14 +66,24 @@ def explosions(grille, dic_bombes, dic_bomber):
 """
 MAIN
 """
-def main(grille, g, dic_bombes, dic_bomber):
+def main(grille, g, dic_bombes, dic_bomber, dic_fantome, dic_ethernet, settings):
 
-    while True:
+    DEFAULT_SETTING = settings.copy() 
+    OnGameSettings = DEFAULT_SETTING.copy()
+
+    fantomes = dic_fantome
+    ethernet = dic_ethernet
+    
+    while OnGameSettings["timer"] > 0:
 
         # affichage dans le terminal pour les tests
         affichage_grille(grille)
         print("dic_bombes:", dic_bombes)
         print("dic_bomber:", dic_bomber)
+
+        print("dic_fantome:", len(dic_fantome))
+        print("dic_ethernet:", len(dic_ethernet))
+        print(f"TIMER : {OnGameSettings['timer']}              TIMERFANTOME : {OnGameSettings['timerfantome']}")
 
         touche = g.attendreTouche()
 
@@ -89,15 +99,26 @@ def main(grille, g, dic_bombes, dic_bomber):
             action_bomber(grille, touche, dic_bombes)
 
             resoudre_action()
-
-            deplacer_fantomes()
-
-            attaque_fantomes()
-
-            faire_apparaitre_fantomes()
-
+            
             updater_timers(dic_bombes)
 
             explosions(grille, dic_bombes, dic_bomber)
 
+        if OnGameSettings["timerfantome"] == 0:
+            apparition_fantomes(grille,dic_fantome,dic_ethernet)
+            OnGameSettings["timerfantome"] = DEFAULT_SETTING["timerfantome"]
+        
+        if len(fantomes) > 0:
+            deplacerFantomes(grille, fantomes)
+        
+        round_timer(OnGameSettings)
             # render()
+
+
+    
+    for i in range(3):
+        print("\n")
+    print("---------------------------------------------------------\n\n\n")
+    print("Partie Terminée".center(55))
+    print("\n\n\n---------------------------------------------------------")
+
