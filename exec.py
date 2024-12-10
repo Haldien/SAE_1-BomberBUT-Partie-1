@@ -14,7 +14,19 @@ grille = [
     [["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"]]
 ]
 
+# grille de test pour le déplacement des fantômes
+grille = [
+    [["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"]],
+    [["C"], [   ], [   ], ["P"], [   ], [   ], [   ], [   ], ["C"]],
+    [["C"], ["M"], ["C"], ["M"], ["C"], ["M"], ["C"], ["M"], ["C"]],
+    [["C"], [   ], [   ], [   ], [   ], [   ], ["E"], [   ], ["C"]],
+    [["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"]]
+]
 
+
+"""
+    les Dictionnaires
+"""
 dic_fantome = {}
 dic_prise = { "E" : []}
 
@@ -23,6 +35,10 @@ dic_bomber = {
     "PV":3,
     "Niv":0,
     "Score":0
+}
+settings = { 
+    "timer" : 100, 
+    "timerfantome": 20,
 }
 
 # timer global = 100; comment gérer sans 'global' ?
@@ -33,4 +49,4 @@ dic_bomber = {
     Et comme ça à chaque appel de boucle on fait en sorte que le timer se modifie
 """
 
-main(grille, g, dic_bombes, dic_bomber)
+main(grille, g, dic_bombes, dic_bomber, dic_fantome, dic_prise, settings)
