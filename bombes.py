@@ -83,7 +83,7 @@ def calculer_cases_affectees(grille, coord, dic_bomber) -> dict[str:list[tuple[i
     return cases_relatives_vers_absolues(coord, dic_cases_affectees_relatives)
 
 # coord_a_ne_pas_considerer : pour récursion
-def exploser_bombe(grille, coord, dic_bombes, dic_bomber):
+def exploser_bombe(grille, coord, dic_bombes, dic_bomber, dic_fantome):
 
     dic_cases_affectees = calculer_cases_affectees(grille, coord, dic_bomber)
 
@@ -100,11 +100,13 @@ def exploser_bombe(grille, coord, dic_bombes, dic_bomber):
             # à voir
             if "P" in grille[coord_explosion[0]][coord_explosion[1]]:
                 pass
-            if "F" in grille[coord_explosion[0]][coord_explosion[1]]:
-                pass
+            for el in grille[coord_explosion[0]][coord_explosion[1]]:
+                if "F" in el: # el est un fantome maintenant
+                    grille[coord_explosion[0]][coord_explosion[1]].remove(el)
+                    dic_fantome.pop(el)
             if "U" in grille[coord_explosion[0]][coord_explosion[1]]:
                 pass
             if "B" in grille[coord_explosion[0]][coord_explosion[1]]:
-                exploser_bombe(grille, coord_explosion, dic_bombes, dic_bomber)
+                exploser_bombe(grille, coord_explosion, dic_bombes, dic_bomber, dic_fantome)
 
 
