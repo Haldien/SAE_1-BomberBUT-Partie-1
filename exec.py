@@ -20,6 +20,8 @@ grille = [
     [["C"], [   ], [   ], ["P"], [   ], [   ], [   ], [   ], ["C"]],
     [["C"], ["M"], ["C"], ["M"], ["C"], ["M"], ["C"], ["M"], ["C"]],
     [["C"], [   ], [   ], [   ], [   ], [   ], ["E"], [   ], ["C"]],
+    [["C"], ["M"], ["C"], ["M"], ["C"], ["M"], ["C"], ["M"], ["C"]],
+    [["C"], ["U"], [   ], ["M"], ["M"], ["M"], [   ], ["U"], ["C"]],
     [["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"]]
 ]
 
@@ -28,6 +30,7 @@ grille = [
     les Dictionnaires
 """
 dic_jeu = {
+
     "bomber": {
         'pos': (0,0),
         'PV' : 3,
@@ -49,23 +52,12 @@ dic_jeu = {
 }
 
 
-
-dic_fantome = {}
-dic_prise = { "E" : [(3,6)]}
-
-dic_bombes = {}
-dic_bomber = {
-    "PV":3,
-    "Niv":0,
-    "Score":0
-}
-settings = { 
-    "timer" : 100, 
+settings = {
+    "timer" : 100,
     "timerfantome": 20,
     "nombrefantome": 0
 }
 
-# timer global = 100; comment gérer sans 'global' ?
 
 """
     Faudrait que dans la fonction main, avant l'appel de la boucle énorme on est une première definition du timer
@@ -73,4 +65,4 @@ settings = {
     Et comme ça à chaque appel de boucle on fait en sorte que le timer se modifie
 """
 
-main(grille, g, dic_bombes, dic_bomber, dic_fantome, dic_prise, settings)
+main(grille, g, dic_jeu, settings)
