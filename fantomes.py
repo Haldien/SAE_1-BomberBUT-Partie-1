@@ -5,26 +5,26 @@ from format import createMap
 
 #Format Liste Fantome, tuple les prises sont bloquantes
 
-def deplacerFantomes(grille:list, entite:dict) -> None:
+def deplacer_fantomes(grille:list, entite:dict) -> None:
     """
     Cette fonction prend en paramètre une grille et une liste d'entités
     Il va update pour chaque fantôme présent dans la partie
 
     """
     for fantome in entite:
-        posPossible = getPosPossible(grille, entite[fantome][1], entite)
+        pos_possible = get_pos_possible(grille, entite[fantome][1], entite)
 
-        if posPossible != []:
+        if pos_possible != []:
 
-            xPos, yPos = posPossible[0]
+            x_pos, y_pos = pos_possible[0]
             grille[ entite[fantome][1][0] ][ entite[fantome][1][1] ].remove(fantome)
-            grille[xPos][yPos] += [fantome]
-            entite[fantome][1] = (xPos, yPos)
+            grille[x_pos][y_pos] += [fantome]
+            entite[fantome][1] = (x_pos, y_pos)
 
     return
 
 
-def getPosPossible(grille:list, pos:tuple, entite) -> list:
+def get_pos_possible(grille:list, pos:tuple, entite) -> list:
     """
         Cette fonction prend en paramètre :
         Une grille : notre niveau
@@ -34,25 +34,25 @@ def getPosPossible(grille:list, pos:tuple, entite) -> list:
         Cette fonction nous sert à déterminer toute les cases vides proches d'une case cible dont on connaît les coordonnées (pos)
         Elle retourne une liste de tuple de toutes les cases possibles mélangées. Si il n'y a plus de chemin possible elle renvoie une liste vide.
     """
-    xPos, yPos = pos
-    caseDisponible = []
-    posPossible = [ (xPos,yPos-1), (xPos+1,yPos), (xPos,yPos+1), (xPos-1,yPos) ] # Une liste avec toutes les positions possibles par défaut
-    for i in posPossible:
-        xTmp, yTmp = i
-        if case_valide(grille, xTmp, yTmp): # On fait un tri des positions
+    x_pos, y_pos = pos
+    case_disponible = []
+    pos_possible = [ (x_pos,y_pos-1), (x_pos+1,y_pos), (x_pos,y_pos+1), (x_pos-1,y_pos) ] # Une liste avec toutes les positions possibles par défaut
+    for i in pos_possible:
+        x_tmp, y_tmp = i
+        if case_valide(grille, x_tmp, y_tmp): # On fait un tri des positions
             valide = True
             for fant in list(entite):
-                for el in grille[xTmp][yTmp]:
+                for el in grille[x_tmp][y_tmp]:
                     if fant in el:
                         valide = False
                         break
         
             if valide:   
-                caseDisponible += [i] 
+                case_disponible += [i] 
            
     
-    shuffle(caseDisponible)
-    return caseDisponible
+    shuffle(case_disponible)
+    return case_disponible
 
 def apparition_fantomes(grille:list, entite: dict, prise: dict) -> None:
     """
@@ -66,24 +66,22 @@ def apparition_fantomes(grille:list, entite: dict, prise: dict) -> None:
     La taille du dictionnaire correspond aux nombres de fantômes présents dans la partie actuelle.
     """
     global globalData ## > Cette donnée va être remplacer plus tard pour un truc plus propre
-    posPrise = prise["E"]
-    shuffle(posPrise)
-    pos = posPrise[0]
+    pos_prise = prise["E"]
+    shuffle(pos_prise)
+    pos = pos_prise[0]
 
-    caseDisponible = getPosPossible(grille, pos, entite)
-    print
-    if caseDisponible == []: # Si la liste est vide on stop la fonction
+    case_disponible = get_pos_possible(grille, pos, entite)
+    if case_disponible == []: # Si la liste est vide on stop la fonction
         return
-    print(caseDisponible)
-    
-    shuffle(caseDisponible)
-    newEntity = f"F{globalData}"
+
+    shuffle(case_disponible)
+    new_entity = f"F{globalData}"
     globalData += 1
-    entite[newEntity] = ["objetGraphique", (caseDisponible[0][0],caseDisponible[0][1])]
-    grille[caseDisponible[0][0]][caseDisponible[0][1]] += [newEntity]
+    entite[new_entity] = ["objetGraphique", (case_disponible[0][0],case_disponible[0][1])]
+    grille[case_disponible[0][0]][case_disponible[0][1]] += [new_entity]
     
     
-def getPriseEthernet(grille:list) -> list :
+def get_Ethernet(grille:list) -> list :
     """
     Cette fonction prend en paramètre une grille et retourne tout les spaw.. les prises ethernet du niveau
     Renvoie une liste contenant des couples de coordonnées.
@@ -96,7 +94,7 @@ def getPriseEthernet(grille:list) -> list :
                     prise += [(i,j)]
     return prise
 
-def attaque_fantome(grille:list,playerPos:tuple, entite:dict) -> None:
+def attaque_fantome(grille:list,player_pos:tuple, entite:dict) -> None:
     """
         Note au développeur: Le player pos peut directement évoluer avec le dico bomber 
 
@@ -107,10 +105,10 @@ def attaque_fantome(grille:list,playerPos:tuple, entite:dict) -> None:
         Elle ne renvoie rien
     """
     for fantome in entite:
-        xFantome, yFantome = entite[fantome][1]
-        xBomber, yBomber = playerPos
-        if xBomber + 1 == xFantome or xBomber - 1 == xFantome \
-            or yBomber + 1 == yFantome or yBomber -1 == yFantome:
+        x_fantome, y_fantome = entite[fantome][1]
+        x_bomber, y_bomber = player_pos
+        if x_bomber + 1 == x_fantome or x_fantome - 1 == x_fantome \
+            or y_bomber + 1 == y_fantome or y_bomber -1 == y_fantome:
                 print("Un fantôme a touché le joueur")
                 """
                     Faudra aussi faire des tours d'invulnérabilité au cas où la RNG est éclaté
@@ -121,10 +119,4 @@ def attaque_fantome(grille:list,playerPos:tuple, entite:dict) -> None:
     return
 
 
-fantomes = { }
-
-prise = {
-    "E" : []}
-
 globalData = 0
-
