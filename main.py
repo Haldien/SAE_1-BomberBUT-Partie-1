@@ -35,23 +35,8 @@ def action_bomber(grille, touche: str, dic_bombes):
 def resoudre_action():
     pass
 
-
-def deplacer_fantomes():
-    pass
-
-
-def attaque_fantomes():
-    pass
-
-
-def faire_apparaitre_fantomes():
-    pass
-
-
 def updater_timers(dic_bombes):
     updater_timers_bombes(dic_bombes)
-
-
 
 def explosions(grille, dic_bombes, dic_bomber, dic_fantome):
 
@@ -103,15 +88,15 @@ def main(grille, g, dic_bombes, dic_bomber, dic_fantome, dic_ethernet, settings)
             updater_timers(dic_bombes)
 
             explosions(grille, dic_bombes, dic_bomber, dic_fantome)
-
-        if OnGameSettings["timerfantome"] == 0:
-            apparition_fantomes(grille,dic_fantome,dic_ethernet)
-            OnGameSettings["timerfantome"] = DEFAULT_SETTING["timerfantome"]
-        
-        if len(fantomes) > 0:
-            deplacerFantomes(grille, fantomes)
-        
-        round_timer(OnGameSettings)
+    
+            if OnGameSettings["timerfantome"] == 0:
+                apparition_fantomes(grille,dic_fantome,dic_ethernet)
+                OnGameSettings["timerfantome"] = DEFAULT_SETTING["timerfantome"]
+            
+            if len(fantomes) > 0:
+                deplacer_fantomes(grille, fantomes)
+            
+            round_timer(OnGameSettings)
             # render()
 
 
