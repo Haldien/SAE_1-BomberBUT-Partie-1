@@ -52,7 +52,7 @@ def get_pos_possible(grille:list, pos:tuple, entite) -> list:
     shuffle(case_disponible)
     return case_disponible
 
-def apparition_fantomes(grille:list, entite: dict, prise: dict) -> None:
+def apparition_fantomes(grille:list, entite: dict, ethernet: dict) -> None:
     """
     Prend en paramètre une grille, un dictionnaire de fantômes, et un dictionnaire de prises
 
@@ -64,7 +64,7 @@ def apparition_fantomes(grille:list, entite: dict, prise: dict) -> None:
     La taille du dictionnaire correspond aux nombres de fantômes présents dans la partie actuelle.
     """
     global globalData ## > Cette donnée va être remplacer plus tard pour un truc plus propre
-    pos_prise = prise["E"]
+    pos_prise = ethernet["pos"]
     shuffle(pos_prise)
     pos = pos_prise[0]
 
