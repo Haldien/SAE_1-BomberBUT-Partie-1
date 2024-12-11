@@ -8,7 +8,7 @@ from fonctions_utiles import *
 """
 Fonctions principales
 """
-def action_bomber(grille, touche: str, dic_bombes):
+def action_bomber(grille, touche: str, dic_jeu):
 
     # Mappings des touches vers les vecteurs de mouvements correspondant
     mouvements = {
@@ -19,14 +19,14 @@ def action_bomber(grille, touche: str, dic_bombes):
     }
 
     # Mouvements
-    if touche in ["z", "q", "s", "d"] and case_valide(grille, pos_bomber(grille)[0] + mouvements[touche][0], pos_bomber(grille)[1] + mouvements[touche][1]):
+    if touche in ["z", "q", "s", "d"] and case_valide(grille, dic_jeu["bomber"]["pos"][0] + mouvements[touche][0], dic_jeu["bomber"]["pos"][1] + mouvements[touche][1]):
 
-        deplacer_bomber(grille, pos_bomber(grille)[0] + mouvements[touche][0], pos_bomber(grille)[1] + mouvements[touche][1])
-
+        deplacer_bomber(grille, dic_jeu["bomber"]["pos"][0] + mouvements[touche][0], dic_jeu["bomber"]["pos"][1] + mouvements[touche][1], dic_jeu)
 
     # Dépose un bombe
     elif touche == "space":
-        poser_bombe(grille, dic_bombes, pos_bomber(grille)[0], pos_bomber(grille)[1])
+
+        poser_bombe(grille, dic_jeu, dic_jeu["bomber"]["pos"][0], dic_jeu["bomber"]["pos"][1])
 
     # Passe son tour
     elif touche == "Return":
@@ -35,39 +35,42 @@ def action_bomber(grille, touche: str, dic_bombes):
 def resoudre_action():
     pass
 
-def updater_timers(dic_bombes):
-    updater_timers_bombes(dic_bombes)
+def updater_timers(dic_jeu):
+    updater_timers_bombes(dic_jeu)
 
-def explosions(grille, dic_bombes, dic_bomber, dic_fantome):
+def explosions(grille, dic_jeu):
 
     # Vérifie le timer de chaque bombe
-    a_exploser = [coord for coord in dic_bombes if dic_bombes[coord] == 0]
+    a_exploser = [coord for coord in dic_jeu["bombes"] if dic_jeu["bombes"][coord] == 0]
 
     for coord in a_exploser:
-        exploser_bombe(grille, coord, dic_bombes, dic_bomber, dic_fantome)
+        exploser_bombe(grille, coord, dic_jeu)
 
 
 
 """
 MAIN
 """
-def main(grille, g, dic_bombes, dic_bomber, dic_fantome, dic_ethernet, settings):
+def main(grille, g, dic_jeu, settings):
 
     DEFAULT_SETTING = settings.copy() 
     OnGameSettings = DEFAULT_SETTING.copy()
 
-    fantomes = dic_fantome
-    ethernet = dic_ethernet
+    fantomes = dic_jeu["fantomes"]
+    ethernet = dic_jeu["ethernet"]
+
+    # pos initiale
+    dic_jeu["bomber"]["pos"] = pos_bomber(grille)
     
-    while OnGameSettings["timer"] > 0:
+    while OnGameSettings["timer"] > 0 and dic_jeu["bomber"]["PV"] > 0:
 
         # affichage dans le terminal pour les tests
         affichage_grille(grille)
-        print("dic_bombes:", dic_bombes)
-        print("dic_bomber:", dic_bomber)
+        print("bombes:", dic_jeu["bombes"])
+        print("bomber:", dic_jeu["bomber"])
 
-        print("dic_fantome:", dic_fantome)
-        print("dic_ethernet:", dic_ethernet)
+        print("fantome:", dic_jeu["fantomes"])
+        print("ethernet:", dic_jeu["ethernet"])
         print(f"TIMER : {OnGameSettings['timer']}              TIMERFANTOME : {OnGameSettings['timerfantome']}")
 
         touche = g.attendreTouche()
@@ -81,16 +84,16 @@ def main(grille, g, dic_bombes, dic_bomber, dic_fantome, dic_ethernet, settings)
             5. apparition de nouveaux fantômes
             6. réduction des timers et les explosions
             """
-            action_bomber(grille, touche, dic_bombes)
+            action_bomber(grille, touche, dic_jeu)
 
             resoudre_action()
             
-            updater_timers(dic_bombes)
+            updater_timers(dic_jeu)
 
-            explosions(grille, dic_bombes, dic_bomber, dic_fantome)
+            explosions(grille, dic_jeu)
     
             if OnGameSettings["timerfantome"] == 0:
-                apparition_fantomes(grille,dic_fantome,dic_ethernet)
+                apparition_fantomes(grille,dic_jeu)
                 OnGameSettings["timerfantome"] = DEFAULT_SETTING["timerfantome"]
             
             if len(fantomes) > 0:
