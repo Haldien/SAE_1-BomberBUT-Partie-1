@@ -1,8 +1,6 @@
 from random import randint, shuffle
 from fonctions_utiles import *
 
-from format import createMap
-
 #Format Liste Fantome, tuple les prises sont bloquantes
 
 def deplacer_fantomes(grille:list, entite:dict) -> None:
