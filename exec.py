@@ -62,6 +62,7 @@ dic_bomber = {
 settings = { 
     "timer" : 100, 
     "timerfantome": 20,
+    "nombrefantome": 0
 }
 
 # timer global = 100; comment gérer sans 'global' ?
