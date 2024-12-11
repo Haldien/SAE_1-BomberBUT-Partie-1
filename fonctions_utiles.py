@@ -63,8 +63,8 @@ def get_object_pos(grille:list, cible:str) -> list:
         - F, si des fantômes sont déjà existant dans le bâtiment Bastier
     """
     recherche = []
-    for x in range(grille):
-        for y in range(grille[0]):
+    for x in range(len(grille)):
+        for y in range(len(grille[0])):
             for el in grille[x][y]:
                 if cible in el:
                     recherche += [(x,y)]   
