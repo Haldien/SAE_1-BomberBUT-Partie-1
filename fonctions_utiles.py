@@ -13,7 +13,7 @@ def case_valide(grille: list, y: int, x: int) -> bool:
             return False
     return True
 
-def createMap(nomMap:str) -> list:
+def create_map(nomMap:str) -> list:
     """
         Cette fonction prend en argument un nom de map sans l'extension
         Elle reformate cette map pour notre programme
@@ -52,7 +52,7 @@ def affichage_grille(grille):
                 print(f"{case}", end = " ")
         print("\n")
 
-def getObjectPosition(grille:list, cible:str) -> list:
+def get_object_pos(grille:list, cible:str) -> list:
     """
     Cette fonction permet de chercher un objet particulier dans une grille
     str cible 
