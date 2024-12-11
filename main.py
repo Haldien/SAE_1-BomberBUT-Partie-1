@@ -93,7 +93,8 @@ def main(grille, g, dic_jeu, settings):
             explosions(grille, dic_jeu)
             
             if len(fantomes) > 0:
-                attaque_fantome(grille,dic_jeu)
+                if dic_jeu["bomber"]["cooldown"] <= 0: # Dans le cas où il y a plusieurs dégâts en même temps, ça ne s'additionne pas pendant une courte durée
+                    attaque_fantome(grille,dic_jeu)
                 deplacer_fantomes(grille, fantomes)
 
             
