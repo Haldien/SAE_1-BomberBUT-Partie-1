@@ -1,11 +1,12 @@
-def poser_bombe(grille, dic_bombes, y: int, x: int):
+def poser_bombe(grille, dic_jeu, y: int, x: int):
+
     if "B" not in grille[y][x]:
         grille[y][x].append("B")
-        ajouter_a_dic_bombes(dic_bombes, y, x)
+        ajouter_a_dic_bombes(dic_jeu, y, x)
 
 
-def ajouter_a_dic_bombes(dic_bombes, y, x):
-    dic_bombes[(y, x)] = 6
+def ajouter_a_dic_bombes(dic_jeu, y, x):
+    dic_jeu["bombes"][(y, x)] = 6
 
 
 
@@ -32,10 +33,10 @@ def cases_relatives_vers_absolues(coord, dic_cases_affectees_relatives):
     return dic_cases_affectees_absolues
 
 
-def calculer_cases_affectees(grille, coord, dic_bomber) -> dict[str:list[tuple[int]]]:
+def calculer_cases_affectees(grille, coord, dic_jeu) -> dict[str:list[tuple[int]]]:
     
     # "La portée de ses bombes, égale à 1 + Niv / 2" = +1 case de portée tous les 2 niveaux, à part au niveau 2 où il gagne directement 1 case de portée
-    portee = 1 + dic_bomber["Niv"] // 2
+    portee = 1 + dic_jeu["bomber"]["Niv"] // 2
 
     dic_cases_affectees_relatives = {
         "haut": [(0, 0)],
@@ -83,12 +84,12 @@ def calculer_cases_affectees(grille, coord, dic_bomber) -> dict[str:list[tuple[i
     return cases_relatives_vers_absolues(coord, dic_cases_affectees_relatives)
 
 # coord_a_ne_pas_considerer : pour récursion
-def exploser_bombe(grille, coord, dic_bombes, dic_bomber, dic_fantome):
+def exploser_bombe(grille, coord, dic_jeu):
 
-    dic_cases_affectees = calculer_cases_affectees(grille, coord, dic_bomber)
+    dic_cases_affectees = calculer_cases_affectees(grille, coord, dic_jeu)
 
     # Supprime la bombe du dic. Doit être ici et pas dans explosions() pour la récursion
-    dic_bombes.pop(coord)
+    dic_jeu["bombes"].pop(coord)
     # Supprime la réprésentation de la bombe de la grille
     grille[coord[0]][coord[1]].remove("B")
 
@@ -96,18 +97,20 @@ def exploser_bombe(grille, coord, dic_bombes, dic_bomber, dic_fantome):
         for coord_explosion in dic_cases_affectees[direction]:
             if "M" in grille[coord_explosion[0]][coord_explosion[1]]:
                 grille[coord_explosion[0]][coord_explosion[1]].remove("M")
-                dic_bomber["Score"] += 1
+                dic_jeu["bomber"]["Score"] += 1
             # à voir
             if "P" in grille[coord_explosion[0]][coord_explosion[1]]:
-                pass
+                dic_jeu["bomber"]["PV"] -= 1
             for el in grille[coord_explosion[0]][coord_explosion[1]]:
-                if "F" in el: # el est un fantome maintenant
+                if "F" in el:
+                    # el est un fantome maintenant
                     grille[coord_explosion[0]][coord_explosion[1]].remove(el)
-                    dic_fantome.pop(el)
+                    dic_jeu["bombes"].pop(el)
                     grille[coord_explosion[0]][coord_explosion[1]].append("U")
             if "U" in grille[coord_explosion[0]][coord_explosion[1]]:
-                pass
+                grille[coord_explosion[0]][coord_explosion[1]].remove("U")
             if "B" in grille[coord_explosion[0]][coord_explosion[1]]:
-                exploser_bombe(grille, coord_explosion, dic_bombes, dic_bomber, dic_fantome)
+                # on pourrait faire l'appel récursif après qu'on ait calculé tous les affets de cette bombe mais c'est éuiqvalent il me semble faire l'appel ici
+                exploser_bombe(grille, coord_explosion, dic_jeu)
 
 
