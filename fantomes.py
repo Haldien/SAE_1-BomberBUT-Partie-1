@@ -52,7 +52,7 @@ def get_pos_possible(grille:list, pos:tuple, entite) -> list:
     shuffle(case_disponible)
     return case_disponible
 
-def apparition_fantomes(grille:list, entite: dict, ethernet: dict) -> None:
+def apparition_fantomes(grille:list, dic_jeu:dict, settings:dict) -> None:
     """
     Prend en paramètre une grille, un dictionnaire de fantômes, et un dictionnaire de prises
 
@@ -63,8 +63,8 @@ def apparition_fantomes(grille:list, entite: dict, ethernet: dict) -> None:
     }
     La taille du dictionnaire correspond aux nombres de fantômes présents dans la partie actuelle.
     """
-    global globalData ## > Cette donnée va être remplacer plus tard pour un truc plus propre
-    pos_prise = ethernet["pos"]
+    entite = dic_jeu["fantomes"]
+    pos_prise = dic_jeu["ethernet"]["pos"]
     shuffle(pos_prise)
     pos = pos_prise[0]
 
@@ -73,11 +73,10 @@ def apparition_fantomes(grille:list, entite: dict, ethernet: dict) -> None:
         return
 
     shuffle(case_disponible)
-    new_entity = f"F{globalData}"
-    globalData += 1
+    new_entity = f"F{settings["nombrefantome"]}"
+    settings["nombrefantome"] += 1
     entite[new_entity] = ["objetGraphique", (case_disponible[0][0],case_disponible[0][1])]
     grille[case_disponible[0][0]][case_disponible[0][1]] += [new_entity]
-    
     
 def get_Ethernet(grille:list) -> list :
     """
