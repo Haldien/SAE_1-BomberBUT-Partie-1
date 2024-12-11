@@ -105,7 +105,7 @@ def exploser_bombe(grille, coord, dic_jeu):
                 if "F" in el:
                     # el est un fantome maintenant
                     grille[coord_explosion[0]][coord_explosion[1]].remove(el)
-                    dic_jeu["bombes"].pop(el)
+                    dic_jeu["fantomes"].pop(el)
                     grille[coord_explosion[0]][coord_explosion[1]].append("U")
             if "U" in grille[coord_explosion[0]][coord_explosion[1]]:
                 grille[coord_explosion[0]][coord_explosion[1]].remove("U")
