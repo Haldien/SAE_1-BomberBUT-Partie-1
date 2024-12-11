@@ -93,6 +93,7 @@ def main(grille, g, dic_jeu, settings):
             explosions(grille, dic_jeu)
             
             if len(fantomes) > 0:
+                attaque_fantome(grille,dic_jeu)
                 deplacer_fantomes(grille, fantomes)
 
             
