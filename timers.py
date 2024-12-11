@@ -1,6 +1,6 @@
-def updater_timers_bombes(dic_bombes):
-    for key in dic_bombes.keys():
-        dic_bombes[key] -= 1
+def updater_timers_bombes(dic_jeu):
+    for key in dic_jeu["bombes"].keys():
+        dic_jeu["bombes"][key] -= 1
 
 def round_timer(gameSetting:dict) -> None:
     """
