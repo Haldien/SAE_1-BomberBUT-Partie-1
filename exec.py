@@ -35,7 +35,8 @@ dic_jeu = {
         'pos': (0,0),
         'PV' : 3,
         'Niv': 0,
-        'Score': 0
+        'Score': 0,
+        'cooldown' : 0
     },
 
     "bombes" : {
