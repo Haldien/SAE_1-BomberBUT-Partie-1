@@ -93,7 +93,7 @@ def main(grille, g, dic_jeu, settings):
             explosions(grille, dic_jeu)
     
             if OnGameSettings["timerfantome"] == 0:
-                apparition_fantomes(grille,dic_jeu["fantomes"], dic_jeu["ethernet"])
+                apparition_fantomes(grille,dic_jeu, OnGameSettings)
                 OnGameSettings["timerfantome"] = DEFAULT_SETTING["timerfantome"]
             
             if len(fantomes) > 0:
