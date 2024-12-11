@@ -27,6 +27,29 @@ grille = [
 """
     les Dictionnaires
 """
+dic_jeu = {
+    "bomber": {
+        'pos': (0,0),
+        'PV' : 3,
+        'Niv': 0,
+        'Score': 0
+    },
+
+    "bombes" : {
+
+    },
+
+    "ethernet" : {
+        "pos" : [(3,6)],
+    },
+
+    "fantomes" : {
+    }
+
+}
+
+
+
 dic_fantome = {}
 dic_prise = { "E" : [(3,6)]}
 
