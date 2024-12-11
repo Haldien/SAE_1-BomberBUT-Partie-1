@@ -93,6 +93,8 @@ def exploser_bombe(grille, coord, dic_jeu):
     # Supprime la réprésentation de la bombe de la grille
     grille[coord[0]][coord[1]].remove("B")
 
+    a_exploser = list() # pour récursion
+
     for direction in dic_cases_affectees.keys():
         for coord_explosion in dic_cases_affectees[direction]:
             if "M" in grille[coord_explosion[0]][coord_explosion[1]]:
@@ -110,7 +112,8 @@ def exploser_bombe(grille, coord, dic_jeu):
             if "U" in grille[coord_explosion[0]][coord_explosion[1]]:
                 grille[coord_explosion[0]][coord_explosion[1]].remove("U")
             if "B" in grille[coord_explosion[0]][coord_explosion[1]]:
-                # on pourrait faire l'appel récursif après qu'on ait calculé tous les affets de cette bombe mais c'est éuiqvalent il me semble faire l'appel ici
-                exploser_bombe(grille, coord_explosion, dic_jeu)
+                a_exploser.append(coord_explosion)
 
-
+    # l'appel doit se faire une fois que toutes les cases affectées par la première bombe ont été affectées
+    for coord_bombe in a_exploser:
+        exploser_bombe(grille, coord_bombe, dic_jeu)
