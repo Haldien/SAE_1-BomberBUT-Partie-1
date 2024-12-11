@@ -91,7 +91,7 @@ def get_Ethernet(grille:list) -> list :
                     prise += [(i,j)]
     return prise
 
-def attaque_fantome(grille:list,player_pos:tuple, entite:dict) -> None:
+def attaque_fantome(grille:list,dic_jeu:dict) -> None:
     """
         Note au développeur: Le player pos peut directement évoluer avec le dico bomber 
 
@@ -101,19 +101,35 @@ def attaque_fantome(grille:list,player_pos:tuple, entite:dict) -> None:
 
         Elle ne renvoie rien
     """
+    entite = dic_jeu["fantomes"]
+    posFantome = []
     for fantome in entite:
-        x_fantome, y_fantome = entite[fantome][1]
-        x_bomber, y_bomber = player_pos
-        if x_bomber + 1 == x_fantome or x_fantome - 1 == x_fantome \
-            or y_bomber + 1 == y_fantome or y_bomber -1 == y_fantome:
-                print("Un fantôme a touché le joueur")
-                """
-                    Faudra aussi faire des tours d'invulnérabilité au cas où la RNG est éclaté
-                """
-        else:
-            print("rien ne se passe")
+        posFantome += [entite[fantome][1]]
+    x_bomber, y_bomber = dic_jeu["bomber"]["pos"]
+    for pos in posFantome:
+        x_fant, y_fant = pos
+        if est_proche(x_fant, y_fant, x_bomber, y_bomber):
+            print("Tu es touché par un fantome"*6)
+            dic_jeu["bomber"]["PV"] -= 1
+            return
+
+
+    print(posFantome)
 
     return
 
+def est_proche(x_fant:int,y_fant:int, x_bomb:int, y_bomb:int) -> bool:
+    """
+        Cette fonction prend en paramètre 
+        les coordonnées du bomber et les coordonnées d'un fantôme
 
-globalData = 0
+        renvoie un booléen
+    """
+
+    if (x_fant + 1 == x_bomb and y_fant == y_bomb ) \
+        or (x_fant == x_bomb and y_fant - 1 == y_bomb ) \
+            or (x_fant == x_bomb and y_fant + 1 == y_bomb ) \
+                or (x_fant - 1 == x_bomb and y_fant == y_bomb ):
+
+        return True
+    return False
