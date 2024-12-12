@@ -340,10 +340,11 @@ class Canevas(tk.Canvas):
         """
         return self.dessinerRectangle(x, y, 1, 1, couleur)
 
-    def afficherImage(
+     def afficherImage(
         self,
         x: float,
         y: float,
+        size:tuple[int, int],
         fichier: str | PathLike[str],
         ancre: Literal["n", "s", "w", "e", "nw", "sw", "ne", "se", "center"] = "nw",
     ) -> ObjetGraphique:
@@ -362,6 +363,7 @@ class Canevas(tk.Canvas):
             photo_image = self.images[fichier]
         else:
             img = Image.open(fichier)
+            img = img.resize(size)
             photo_image = ImageTk.PhotoImage(img)
             self.images[fichier] = photo_image
 
