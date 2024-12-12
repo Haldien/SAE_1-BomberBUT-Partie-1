@@ -340,7 +340,7 @@ class Canevas(tk.Canvas):
         """
         return self.dessinerRectangle(x, y, 1, 1, couleur)
 
-     def afficherImage(
+    def afficherImage(
         self,
         x: float,
         y: float,
