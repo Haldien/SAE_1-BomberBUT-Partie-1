@@ -4,12 +4,12 @@ from bombes import *
 from timers import *
 from fonctions_utiles import *
 
-
 """
 Fonctions principales
 """
-def action_bomber(grille, touche: str, dic_jeu):
 
+
+def action_bomber(grille, touche: str, dic_jeu):
     # Mappings des touches vers les vecteurs de mouvements correspondant
     mouvements = {
         "z": [-1, 0],
@@ -19,9 +19,11 @@ def action_bomber(grille, touche: str, dic_jeu):
     }
 
     # Mouvements
-    if touche in ["z", "q", "s", "d"] and case_valide(grille, dic_jeu["bomber"]["pos"][0] + mouvements[touche][0], dic_jeu["bomber"]["pos"][1] + mouvements[touche][1]):
+    if touche in ["z", "q", "s", "d"] and case_valide(grille, dic_jeu["bomber"]["pos"][0] + mouvements[touche][0],
+                                                      dic_jeu["bomber"]["pos"][1] + mouvements[touche][1], dic_jeu):
 
-        deplacer_bomber(grille, dic_jeu["bomber"]["pos"][0] + mouvements[touche][0], dic_jeu["bomber"]["pos"][1] + mouvements[touche][1], dic_jeu)
+        deplacer_bomber(grille, dic_jeu["bomber"]["pos"][0] + mouvements[touche][0],
+                        dic_jeu["bomber"]["pos"][1] + mouvements[touche][1], dic_jeu)
 
     # Dépose un bombe
     elif touche == "space":
@@ -32,14 +34,16 @@ def action_bomber(grille, touche: str, dic_jeu):
     elif touche == "Return":
         pass
 
+
 def resoudre_action():
     pass
+
 
 def updater_timers(dic_jeu):
     updater_timers_bombes(dic_jeu)
 
-def explosions(grille, dic_jeu):
 
+def explosions(grille, dic_jeu):
     # Vérifie le timer de chaque bombe
     a_exploser = [coord for coord in dic_jeu["bombes"] if dic_jeu["bombes"][coord] == 0]
 
@@ -47,13 +51,13 @@ def explosions(grille, dic_jeu):
         exploser_bombe(grille, coord, dic_jeu)
 
 
-
 """
 MAIN
 """
-def main(grille, g, dic_jeu, settings):
 
-    DEFAULT_SETTING = settings.copy() 
+
+def main(grille, g, dic_jeu, settings):
+    DEFAULT_SETTING = settings.copy()
     OnGameSettings = DEFAULT_SETTING.copy()
 
     fantomes = dic_jeu["fantomes"]
@@ -61,7 +65,7 @@ def main(grille, g, dic_jeu, settings):
 
     # pos initiale
     dic_jeu["bomber"]["pos"] = pos_bomber(grille)
-    
+
     while OnGameSettings["timer"] > 0 and dic_jeu["bomber"]["PV"] > 0:
 
         # affichage dans le terminal pour les tests
@@ -87,30 +91,24 @@ def main(grille, g, dic_jeu, settings):
             action_bomber(grille, touche, dic_jeu)
 
             resoudre_action()
-            
+
             updater_timers(dic_jeu)
 
             if len(fantomes) > 0:
-                if dic_jeu["bomber"]["cooldown"] <= 0: # Dans le cas où il y a plusieurs dégâts en même temps, ça ne s'additionne pas pendant une courte durée
-                    attaque_fantome(grille,dic_jeu)
-                deplacer_fantomes(grille, fantomes)
+                if dic_jeu["bomber"][
+                    "cooldown"] <= 0:  # Dans le cas où il y a plusieurs dégâts en même temps, ça ne s'additionne pas pendant une courte durée
+                    attaque_fantome(grille, dic_jeu)
+                deplacer_fantomes(grille, dic_jeu)
 
-             if OnGameSettings["timerfantome"] == 0:
-                apparition_fantomes(grille,dic_jeu, OnGameSettings)
+            if OnGameSettings["timerfantome"] == 0:
+                apparition_fantomes(grille, dic_jeu, OnGameSettings)
                 OnGameSettings["timerfantome"] = DEFAULT_SETTING["timerfantome"]
-            
-            
+
             explosions(grille, dic_jeu)
-            
-            
-    
-           
-            
+
             round_timer(OnGameSettings)
             # render()
 
-
-    
     for i in range(3):
         print("\n")
     print("---------------------------------------------------------\n\n\n")
