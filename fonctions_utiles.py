@@ -1,5 +1,6 @@
+
 # Valables pour le bomberman et les fantomes mais pas pour les bombes
-def case_valide(grille: list, y: int, x: int) -> bool:
+def case_valide(grille: list, y: int, x: int, dic_jeu) -> bool:
     """
         Cette fonction prend en paramètre,
         une grille de jeu, des coordonnées x et y
@@ -8,7 +9,7 @@ def case_valide(grille: list, y: int, x: int) -> bool:
     """
     if not (0 <= y <= len(grille) - 1 and 0 <= x <= len(grille[0]) - 1):
         return False
-    for el in ["M", "C", "E", "F", "P"]:
+    for el in ["M", "C", "E", "P"] + list(dic_jeu["fantomes"].keys()):
         if el in grille[y][x]:
             return False
     return True
