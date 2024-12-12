@@ -1,7 +1,7 @@
 from tkiteasy import ObjetGraphique
 from time import sleep
 
-TAILLE_FENETRE = (600, 500) # (x, y)
+TAILLE_FENETRE = (1200, 1000) # (x, y)
 
 
 def dimensions_de_case(grille:list[list[list[str]]])-> tuple[int, int]:
@@ -32,7 +32,7 @@ def render(grille, g, dic_jeu, objets_graphiques = None)-> list[ObjetGraphique]:
                 obj = g.dessinerRectangle(coord_x, coord_y, dimensions_case[0], dimensions_case[1], "grey")
                 objets_graphiques.append(obj)
             if "M" in grille[y][x]:
-                obj = g.dessinerRectangle(coord_x, coord_y, dimensions_case[0], dimensions_case[1], "burlywood4")
+                obj = g.afficherImage(coord_x, coord_y, (dimensions_case[0], dimensions_case[1]), "sprites/mur.png")
                 objets_graphiques.append(obj)
             if "B" in grille[y][x]:
                 obj = g.dessinerRectangle(coord_x, coord_y, dimensions_case[0], dimensions_case[1], "red")
@@ -70,7 +70,7 @@ def render_explosions_apparition(grille, g, case_affectees)-> list[ObjetGraphiqu
         coord_x =  coord[1] * dimensions_case[0]
         coord_y =  coord[0] * dimensions_case[1]
 
-        obj = g.dessinerRectangle(coord_x, coord_y, dimensions_case[0], dimensions_case[1], "yellow")
+        obj = g.afficherImage(coord_x, coord_y, (dimensions_case[0], dimensions_case[1]), "sprites/explosion.png")
         objets_graphiques_explosions.append(obj)
 
     return objets_graphiques_explosions
