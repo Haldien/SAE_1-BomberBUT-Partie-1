@@ -3,7 +3,9 @@ import tkiteasy
 from main import *
 
 
-g = tkiteasy.ouvrirFenetre(400, 400)  # taille à changer
+global TAILLE_FENETRE
+
+g = tkiteasy.ouvrirFenetre(TAILLE_FENETRE[0], TAILLE_FENETRE[1])  # taille à changer
 
 # grille : list[list[list[str]]]
 grille = [
@@ -25,6 +27,7 @@ grille = [
     [["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"]]
 ]
 
+grille = create_map("map0")
 
 """
     les Dictionnaires
@@ -37,6 +40,7 @@ dic_jeu = {
         'Niv': 0,
         'Score': 0,
         'cooldown' : 0
+
     },
 
     "bombes" : {
@@ -54,7 +58,7 @@ dic_jeu = {
 
 
 settings = {
-    "timer" : 100,
+    "timer" : 200,
     "timerfantome": 20,
     "nombrefantome": 0
 }
