@@ -95,15 +95,16 @@ def main(grille, g, dic_jeu, settings):
                     attaque_fantome(grille,dic_jeu)
                 deplacer_fantomes(grille, fantomes)
 
+             if OnGameSettings["timerfantome"] == 0:
+                apparition_fantomes(grille,dic_jeu, OnGameSettings)
+                OnGameSettings["timerfantome"] = DEFAULT_SETTING["timerfantome"]
             
             
             explosions(grille, dic_jeu)
             
             
     
-            if OnGameSettings["timerfantome"] == 0:
-                apparition_fantomes(grille,dic_jeu, OnGameSettings)
-                OnGameSettings["timerfantome"] = DEFAULT_SETTING["timerfantome"]
+           
             
             round_timer(OnGameSettings)
             # render()
