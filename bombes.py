@@ -1,3 +1,5 @@
+from render import *
+
 def poser_bombe(grille, dic_jeu, y: int, x: int):
 
     if "B" not in grille[y][x]:
@@ -18,6 +20,7 @@ def case_valide_pour_explosion(grille, y, x) -> bool:
     return True
 
 def cases_relatives_vers_absolues(coord, dic_cases_affectees_relatives):
+
     dic_cases_affectees_absolues = {
         "haut": [],
         "droite": [],
@@ -36,7 +39,8 @@ def cases_relatives_vers_absolues(coord, dic_cases_affectees_relatives):
 def calculer_cases_affectees(grille, coord, dic_jeu) -> dict[str:list[tuple[int]]]:
     
     # "La portée de ses bombes, égale à 1 + Niv / 2" = +1 case de portée tous les 2 niveaux, à part au niveau 2 où il gagne directement 1 case de portée
-    portee = 1 + dic_jeu["bomber"]["Niv"] // 2
+    portee = int(1 + dic_jeu["bomber"]["Niv"] / 2)
+
 
     dic_cases_affectees_relatives = {
         "haut": [(0, 0)],
@@ -84,11 +88,11 @@ def calculer_cases_affectees(grille, coord, dic_jeu) -> dict[str:list[tuple[int]
     return cases_relatives_vers_absolues(coord, dic_cases_affectees_relatives)
 
 # coord_a_ne_pas_considerer : pour récursion
-def exploser_bombe(grille, coord, dic_jeu):
+def exploser_bombe(grille, g, coord, dic_jeu):
 
     dic_cases_affectees = calculer_cases_affectees(grille, coord, dic_jeu)
 
-    # Supprime la bombe du dic. Doit être ici et pas dans explosions() pour la récursion
+    # Supprime la bombe du dic.
     dic_jeu["bombes"].pop(coord)
     # Supprime la réprésentation de la bombe de la grille
     grille[coord[0]][coord[1]].remove("B")
@@ -114,6 +118,13 @@ def exploser_bombe(grille, coord, dic_jeu):
             if "B" in grille[coord_explosion[0]][coord_explosion[1]]:
                 a_exploser.append(coord_explosion)
 
-    # l'appel doit se faire une fois que toutes les cases affectées par la première bombe ont été affectées
-    for coord_bombe in a_exploser:
-        exploser_bombe(grille, coord_bombe, dic_jeu)
+    objets_graphiques_explosions = render_explosions_apparition(grille, g, dic_cases_affectees)
+    #print(coord, objets_graphiques_explosions)
+    # l'appel doit se faire une fois que toutes les cases affectées par la première bombe ont été affectées (voir consigne)
+    if a_exploser:
+        for coord_bombe in a_exploser:
+            #print("recursion :", objets_graphiques_explosions)
+            return objets_graphiques_explosions + exploser_bombe(grille, g, coord_bombe, dic_jeu)
+
+    else:
+        return objets_graphiques_explosions
