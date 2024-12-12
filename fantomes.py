@@ -3,26 +3,25 @@ from fonctions_utiles import *
 
 #Format Liste Fantome, tuple les prises sont bloquantes
 
-def deplacer_fantomes(grille:list, entite:dict) -> None:
+def deplacer_fantomes(grille:list, dic_jeu) -> None:
     """
     Cette fonction prend en paramètre une grille et une liste d'entités
     Il va update pour chaque fantôme présent dans la partie
-
     """
-    for fantome in entite:
-        pos_possible = get_pos_possible(grille, entite[fantome][1], entite)
+    for fantome in dic_jeu["fantomes"]:
+        pos_possible = get_pos_possible(grille, dic_jeu["fantomes"][fantome][1], dic_jeu)
 
         if pos_possible != []:
 
             x_pos, y_pos = pos_possible[0]
-            grille[ entite[fantome][1][0] ][ entite[fantome][1][1] ].remove(fantome)
+            grille[ dic_jeu["fantomes"][fantome][1][0] ][ dic_jeu["fantomes"][fantome][1][1] ].remove(fantome)
             grille[x_pos][y_pos] += [fantome]
-            entite[fantome][1] = (x_pos, y_pos)
+            dic_jeu["fantomes"][fantome][1] = (x_pos, y_pos)
 
     return
 
 
-def get_pos_possible(grille:list, pos:tuple, entite) -> list:
+def get_pos_possible(grille:list, pos:tuple, dic_jeu) -> list:
     """
         Cette fonction prend en paramètre :
         Une grille : notre niveau
@@ -37,16 +36,8 @@ def get_pos_possible(grille:list, pos:tuple, entite) -> list:
     pos_possible = [ (x_pos,y_pos-1), (x_pos+1,y_pos), (x_pos,y_pos+1), (x_pos-1,y_pos) ] # Une liste avec toutes les positions possibles par défaut
     for i in pos_possible:
         x_tmp, y_tmp = i
-        if case_valide(grille, x_tmp, y_tmp): # On fait un tri des positions
-            valide = True
-            for fant in list(entite):
-                for el in grille[x_tmp][y_tmp]:
-                    if fant in el:
-                        valide = False
-                        break
-        
-            if valide:   
-                case_disponible += [i] 
+        if case_valide(grille, x_tmp, y_tmp, dic_jeu): # On fait un tri des positions
+            case_disponible += [i]
            
     
     shuffle(case_disponible)
@@ -68,7 +59,7 @@ def apparition_fantomes(grille:list, dic_jeu:dict, settings:dict) -> None:
     shuffle(pos_prise)
     pos = pos_prise[0]
 
-    case_disponible = get_pos_possible(grille, pos, entite)
+    case_disponible = get_pos_possible(grille, pos, dic_jeu)
     if case_disponible == []: # Si la liste est vide on stop la fonction
         return
 
@@ -91,7 +82,7 @@ def get_Ethernet(grille:list) -> list :
                     prise += [(i,j)]
     return prise
 
-def attaque_fantome(grille:list,dic_jeu:dict) -> None:
+def attaque_fantome(grille:list, dic_jeu:dict) -> None:
     """
         Note au développeur: Le player pos peut directement évoluer avec le dico bomber 
 
