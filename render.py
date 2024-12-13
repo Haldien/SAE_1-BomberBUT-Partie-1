@@ -32,25 +32,25 @@ def render(grille, g, dic_jeu, objets_graphiques = None)-> list[ObjetGraphique]:
                 obj = g.afficherImage(coord_x, coord_y, (dimensions_case[0], dimensions_case[1]), "sprites/mur.png")
                 objets.append(obj)
             if "B" in grille[y][x]:
-                obj = g.dessinerRectangle(coord_x, coord_y, dimensions_case[0], dimensions_case[1], "red")
+                obj = g.afficherImage(coord_x, coord_y, (dimensions_case[0], dimensions_case[1]), "sprites/bombe.png")
                 objets.append(obj)
             if "P" in grille[y][x]:
-                obj = g.dessinerRectangle(coord_x, coord_y, dimensions_case[0], dimensions_case[1], "blue")
+                obj = g.afficherImage(coord_x, coord_y, (dimensions_case[0], dimensions_case[1]), "sprites/bomberman.png")
                 objets.append(obj)
             if "U" in grille[y][x]:
-                obj = g.dessinerRectangle(coord_x, coord_y, dimensions_case[0], dimensions_case[1], "pink")
+                obj = g.afficherImage(coord_x, coord_y, (dimensions_case[0], dimensions_case[1]), "sprites/upgrade.png")
                 objets.append(obj)
             for el in grille[y][x]:
                 if el in list(dic_jeu["fantomes"].keys()):
-                    obj = g.dessinerRectangle(coord_x, coord_y, dimensions_case[0], dimensions_case[1], "white")
+                    obj = g.afficherImage(coord_x, coord_y, (dimensions_case[0], dimensions_case[1]), "sprites/fantome.png")
                     objets.append(obj)
-            
+
             # On place les éléments indestructibles qu'à la première itération de render()
             if objets_graphiques is None:
                 if "C" in grille[y][x]:
-                    g.dessinerRectangle(coord_x, coord_y, dimensions_case[0], dimensions_case[1], "grey")
+                    g.afficherImage(coord_x, coord_y, (dimensions_case[0], dimensions_case[1]), "sprites/colonne.png")
                 if "E" in grille[y][x]:
-                    g.dessinerRectangle(coord_x, coord_y, dimensions_case[0], dimensions_case[1], "green")
+                    g.afficherImage(coord_x, coord_y, (dimensions_case[0], dimensions_case[1]), "sprites/ethernet.png")
 
 
     return objets
