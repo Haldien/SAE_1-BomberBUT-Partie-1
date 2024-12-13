@@ -1,17 +1,18 @@
 from tkiteasy import ObjetGraphique
 from time import sleep
 
-TAILLE_FENETRE = (1200, 1000) # (x, y)
+TAILLE_FENETRE = (800, 800) # (x, y)
 
 
 def dimensions_de_case(grille:list[list[list[str]]])-> tuple[int, int]:
     global TAILLE_FENETRE
 
     # dimmensions de case retournées : tuple de la forme (x, y) !!
-    return TAILLE_FENETRE[0] // len(grille[0]), TAILLE_FENETRE[1] // len(grille)
+    return TAILLE_FENETRE[0] // len(grille[0]), (TAILLE_FENETRE[1]-TAILLE_FENETRE[1]//7) // len(grille)
+    # On réserve 1/7 de la fenêtre en bas pour l'affichage du score, etc :            ^
 
-
-def render(grille, g, dic_jeu, objets_graphiques = None)-> list[ObjetGraphique]:
+def render(grille, g, dic_jeu, OnGameSettings, objets_graphiques = None)-> list[ObjetGraphique]:
+    global TAILLE_FENETRE
 
     dimensions_case = dimensions_de_case(grille)
 
@@ -52,6 +53,16 @@ def render(grille, g, dic_jeu, objets_graphiques = None)-> list[ObjetGraphique]:
                 if "E" in grille[y][x]:
                     g.afficherImage(coord_x, coord_y, (dimensions_case[0], dimensions_case[1]), "sprites/ethernet.png")
 
+
+    # Affichages textes
+    obj = g.afficherTexte(f"Score : {dic_jeu['bomber']['Score']}", TAILLE_FENETRE[0]//5, 6*TAILLE_FENETRE[1]//7+0.25*TAILLE_FENETRE[1]//7, "white", TAILLE_FENETRE[1]//25)
+    objets.append(obj)
+    obj = g.afficherTexte(f"PV : {dic_jeu['bomber']['PV']}", TAILLE_FENETRE[0] // 5, 6 * TAILLE_FENETRE[1] // 7 + 0.7 * TAILLE_FENETRE[1] // 7, "white", TAILLE_FENETRE[1]//25)
+    objets.append(obj)
+    obj = g.afficherTexte(f"Timer : {OnGameSettings['timer']}", 3.5*TAILLE_FENETRE[0] // 5, 6 * TAILLE_FENETRE[1] // 7 + 0.25 * TAILLE_FENETRE[1] // 7, "white", TAILLE_FENETRE[1]//25)
+    objets.append(obj)
+    obj = g.afficherTexte(f"Timer fantome : {OnGameSettings['timerfantome']}", 3.5 * TAILLE_FENETRE[0] // 5,6 * TAILLE_FENETRE[1] // 7 + 0.7 * TAILLE_FENETRE[1] // 7, "white", TAILLE_FENETRE[1]//25)
+    objets.append(obj)
 
     return objets
 
