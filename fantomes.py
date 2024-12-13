@@ -81,7 +81,7 @@ def apparition_fantomes(grille:list, dic_jeu:dict, settings:dict) -> None:
     shuffle(case_disponible)
     new_entity = f"F{settings["nombrefantome"]}"
     settings["nombrefantome"] += 1
-    entite[new_entity] = ["objetGraphique", (case_disponible[0][0],case_disponible[0][1])]
+    entite[new_entity] = ["objetGraphique", (case_disponible[0][0],case_disponible[0][1]), "sud"]
     grille[case_disponible[0][0]][case_disponible[0][1]] += [new_entity]
     
 def get_Ethernet(grille:list) -> list :
