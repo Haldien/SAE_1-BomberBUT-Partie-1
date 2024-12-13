@@ -71,7 +71,7 @@ def main(grille, g, dic_jeu, settings):
     dic_jeu["bomber"]["pos"] = pos_bomber(grille)
 
     # affichage initial
-    objets_graphiques = render(grille, g, dic_jeu)
+    objets_graphiques = render(grille, g, dic_jeu, OnGameSettings)
 
     objets_graphiques_explosions = list()
 
@@ -123,7 +123,7 @@ def main(grille, g, dic_jeu, settings):
 
                 round_timer(OnGameSettings)
 
-                objets_graphiques = render(grille, g, dic_jeu, objets_graphiques)
+                objets_graphiques = render(grille, g, dic_jeu, OnGameSettings, objets_graphiques)
 
     for i in range(3):
         print("\n")
