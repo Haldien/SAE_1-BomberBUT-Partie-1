@@ -12,11 +12,26 @@ def deplacer_fantomes(grille:list, dic_jeu) -> None:
         pos_possible = get_pos_possible(grille, dic_jeu["fantomes"][fantome][1], dic_jeu)
 
         if pos_possible != []:
+            ancien_y,ancien_x = dic_jeu["fantomes"][fantome][1]
+            y_pos, x_pos = pos_possible[0]
 
-            x_pos, y_pos = pos_possible[0]
+            print(dic_jeu["fantomes"][fantome][1], pos_possible[0])
+            if pos_possible[0] == (ancien_y,ancien_x-1):
+                dic_jeu["fantomes"][fantome][2] = "ouest"
+            elif pos_possible[0] == (ancien_y,ancien_x+1):
+                dic_jeu["fantomes"][fantome][2] = "est"
+            elif pos_possible[0] == (ancien_y-1,ancien_x):
+                dic_jeu["fantomes"][fantome][2] = "nord"
+            elif pos_possible[0] == (ancien_y+1,ancien_x):
+                dic_jeu["fantomes"][fantome][2] = "sud"
+    
+
+
             grille[ dic_jeu["fantomes"][fantome][1][0] ][ dic_jeu["fantomes"][fantome][1][1] ].remove(fantome)
-            grille[x_pos][y_pos] += [fantome]
-            dic_jeu["fantomes"][fantome][1] = (x_pos, y_pos)
+            grille[y_pos][x_pos] += [fantome]
+            dic_jeu["fantomes"][fantome][1] = (y_pos, x_pos)
+
+
 
     return
 
