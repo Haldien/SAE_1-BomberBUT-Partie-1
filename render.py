@@ -20,7 +20,7 @@ def render(grille, g, dic_jeu, objets_graphiques = None)-> list[ObjetGraphique]:
         for obj in objets_graphiques:
             g.supprimer(obj)
 
-    objets_graphiques = list()
+    objets = list()
 
     for y in range(len(grille)):
         for x in range(len(grille[0])):
@@ -28,31 +28,32 @@ def render(grille, g, dic_jeu, objets_graphiques = None)-> list[ObjetGraphique]:
             coord_x = x * dimensions_case[0]
             coord_y = y * dimensions_case[1]
 
-            if "C" in grille[y][x]:
-                obj = g.dessinerRectangle(coord_x, coord_y, dimensions_case[0], dimensions_case[1], "grey")
-                objets_graphiques.append(obj)
             if "M" in grille[y][x]:
                 obj = g.afficherImage(coord_x, coord_y, (dimensions_case[0], dimensions_case[1]), "sprites/mur.png")
-                objets_graphiques.append(obj)
+                objets.append(obj)
             if "B" in grille[y][x]:
                 obj = g.dessinerRectangle(coord_x, coord_y, dimensions_case[0], dimensions_case[1], "red")
-                objets_graphiques.append(obj)
-            if "E" in grille[y][x]:
-                obj = g.dessinerRectangle(coord_x, coord_y, dimensions_case[0], dimensions_case[1], "green")
-                objets_graphiques.append(obj)
+                objets.append(obj)
             if "P" in grille[y][x]:
                 obj = g.dessinerRectangle(coord_x, coord_y, dimensions_case[0], dimensions_case[1], "blue")
-                objets_graphiques.append(obj)
+                objets.append(obj)
             if "U" in grille[y][x]:
                 obj = g.dessinerRectangle(coord_x, coord_y, dimensions_case[0], dimensions_case[1], "pink")
-                objets_graphiques.append(obj)
+                objets.append(obj)
             for el in grille[y][x]:
                 if el in list(dic_jeu["fantomes"].keys()):
                     obj = g.dessinerRectangle(coord_x, coord_y, dimensions_case[0], dimensions_case[1], "white")
-                    objets_graphiques.append(obj)
+                    objets.append(obj)
+            
+            # On place les éléments indestructibles qu'à la première itération de render()
+            if objets_graphiques is None:
+                if "C" in grille[y][x]:
+                    g.dessinerRectangle(coord_x, coord_y, dimensions_case[0], dimensions_case[1], "grey")
+                if "E" in grille[y][x]:
+                    g.dessinerRectangle(coord_x, coord_y, dimensions_case[0], dimensions_case[1], "green")
 
 
-    return objets_graphiques
+    return objets
 
 
 def render_explosions_apparition(grille, g, case_affectees)-> list[ObjetGraphique]:
