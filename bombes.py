@@ -101,7 +101,9 @@ def exploser_bombe(grille, g, coord, dic_jeu):
 
     for direction in dic_cases_affectees.keys():
         for coord_explosion in dic_cases_affectees[direction]:
+
             if "M" in grille[coord_explosion[0]][coord_explosion[1]]:
+                dic_jeu["mur"][(coord_explosion[1], coord_explosion[0])].supprimerEntite()
                 grille[coord_explosion[0]][coord_explosion[1]].remove("M")
                 dic_jeu["bomber"]["Score"] += 1
             # à voir
@@ -110,6 +112,10 @@ def exploser_bombe(grille, g, coord, dic_jeu):
             for el in grille[coord_explosion[0]][coord_explosion[1]]:
                 if "F" in el:
                     # el est un fantome maintenant
+                    print(dic_jeu["fantomes"][el][0])
+                    
+                    dic_jeu["fantomes"][el][0].supprimerEntite()
+                    
                     grille[coord_explosion[0]][coord_explosion[1]].remove(el)
                     dic_jeu["fantomes"].pop(el)
                     grille[coord_explosion[0]][coord_explosion[1]].append("U")
