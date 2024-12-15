@@ -17,13 +17,13 @@ def deplacer_fantomes(grille:list, dic_jeu) -> None:
 
             print(dic_jeu["fantomes"][fantome][1], pos_possible[0])
             if pos_possible[0] == (ancien_y,ancien_x-1):
-                dic_jeu["fantomes"][fantome][2] = "ouest"
+                dic_jeu["fantomes"][fantome][2] = "gauche"
             elif pos_possible[0] == (ancien_y,ancien_x+1):
-                dic_jeu["fantomes"][fantome][2] = "est"
+                dic_jeu["fantomes"][fantome][2] = "droite"
             elif pos_possible[0] == (ancien_y-1,ancien_x):
-                dic_jeu["fantomes"][fantome][2] = "nord"
+                dic_jeu["fantomes"][fantome][2] = "haut"
             elif pos_possible[0] == (ancien_y+1,ancien_x):
-                dic_jeu["fantomes"][fantome][2] = "sud"
+                dic_jeu["fantomes"][fantome][2] = "bas"
     
 
 
@@ -72,6 +72,8 @@ def apparition_fantomes(grille:list, dic_jeu:dict, settings:dict) -> None:
     entite = dic_jeu["fantomes"]
     pos_prise = dic_jeu["ethernet"]["pos"]
     shuffle(pos_prise)
+    if pos_prise == []:
+        return 
     pos = pos_prise[0]
 
     case_disponible = get_pos_possible(grille, pos, dic_jeu)
@@ -81,7 +83,7 @@ def apparition_fantomes(grille:list, dic_jeu:dict, settings:dict) -> None:
     shuffle(case_disponible)
     new_entity = f"F{settings["nombrefantome"]}"
     settings["nombrefantome"] += 1
-    entite[new_entity] = ["objetGraphique", (case_disponible[0][0],case_disponible[0][1]), "sud"]
+    entite[new_entity] = ["objetGraphique", (case_disponible[0][0],case_disponible[0][1]), "bas"]
     grille[case_disponible[0][0]][case_disponible[0][1]] += [new_entity]
     
 def get_Ethernet(grille:list) -> list :
@@ -118,9 +120,6 @@ def attaque_fantome(grille:list, dic_jeu:dict) -> None:
             print("Tu es touché par un fantome"*6)
             dic_jeu["bomber"]["PV"] -= 1
             return
-
-
-    print(posFantome)
 
     return
 
