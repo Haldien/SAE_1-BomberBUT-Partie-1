@@ -19,17 +19,29 @@ def action_bomber(grille, touche: str, dic_jeu):
         "s": [1, 0],
         "d": [0, 1]
     }
+    match(touche):
+        case "z":
+            dic_jeu["bomber"]["direction"] = "haut"
+        case "q":
+            dic_jeu["bomber"]["direction"] = "gauche"
+        case "s":
+            dic_jeu["bomber"]["direction"] = "bas"
+        case "d":
+            dic_jeu["bomber"]["direction"] = "droite"
+    
 
     # Mouvements
     if touche in ["z", "q", "s", "d"] and case_valide(grille, dic_jeu["bomber"]["pos"][0] + mouvements[touche][0],
                                                       dic_jeu["bomber"]["pos"][1] + mouvements[touche][1], dic_jeu):
+        
+        print(touche)
 
         deplacer_bomber(grille, dic_jeu["bomber"]["pos"][0] + mouvements[touche][0],
                         dic_jeu["bomber"]["pos"][1] + mouvements[touche][1], dic_jeu)
 
     # Dépose un bombe
     elif touche == "space":
-
+        dic_jeu["bomber"]["direction"] = "pose"
         poser_bombe(grille, dic_jeu, dic_jeu["bomber"]["pos"][0], dic_jeu["bomber"]["pos"][1])
 
     # Passe son tour
@@ -41,8 +53,9 @@ def resoudre_action():
     pass
 
 
-def updater_timers(dic_jeu):
+def updater_timers(dic_jeu, settings):
     updater_timers_bombes(dic_jeu)
+    round_timer(settings)
 
 
 def explosions(grille, g, dic_jeu)->list[ObjetGraphique]:
@@ -69,11 +82,15 @@ def main(grille, g, dic_jeu, settings):
 
     # pos initiale
     dic_jeu["bomber"]["pos"] = pos_bomber(grille)
-
     # affichage initial
-    objets_graphiques = render(grille, g, dic_jeu, OnGameSettings)
+    #objets_graphiques = render(grille, g, dic_jeu)
+
 
     objets_graphiques_explosions = list()
+    render_undestructible(g, grille)
+    dic_jeu["mur"] = get_wall(g, grille)
+
+    spawn_bomber(g, dic_jeu, grille)
 
     while OnGameSettings["timer"] > 0 and dic_jeu["bomber"]["PV"] > 0:
 
@@ -104,26 +121,30 @@ def main(grille, g, dic_jeu, settings):
                 6. réduction des timers et les explosions
                 """
                 action_bomber(grille, touche, dic_jeu)
+                render_depBomber(dic_jeu)
 
                 resoudre_action()
 
-                updater_timers(dic_jeu)
+                updater_timers(dic_jeu, OnGameSettings)
 
                 if len(fantomes) > 0:
                     if dic_jeu["bomber"][
                         "cooldown"] <= 0:  # Dans le cas où il y a plusieurs dégâts en même temps, ça ne s'additionne pas pendant une courte durée
                         attaque_fantome(grille, dic_jeu)
                     deplacer_fantomes(grille, dic_jeu)
+                    render_depFantome(dic_jeu)
 
                 if OnGameSettings["timerfantome"] == 0:
                     apparition_fantomes(grille, dic_jeu, OnGameSettings)
+                    spawn_fantome(g, dic_jeu, grille)
                     OnGameSettings["timerfantome"] = DEFAULT_SETTING["timerfantome"]
 
                 objets_graphiques_explosions = explosions(grille, g, dic_jeu)
 
-                round_timer(OnGameSettings)
+                
 
-                objets_graphiques = render(grille, g, dic_jeu, OnGameSettings, objets_graphiques)
+                #objets_graphiques = render(grille, g, dic_jeu, objets_graphiques)
+                render_undestructible(g, grille)
 
     for i in range(3):
         print("\n")
