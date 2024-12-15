@@ -3,7 +3,7 @@ import tkiteasy
 from main import *
 
 
-global TAILLE_FENETRE
+#global TAILLE_FENETRE
 
 g = tkiteasy.ouvrirFenetre(TAILLE_FENETRE[0], TAILLE_FENETRE[1])  # taille à changer
 
@@ -24,10 +24,10 @@ grille = [
     [["C"], [   ], [   ], [   ], [   ], [   ], ["E"], [   ], ["C"]],
     [["C"], ["M"], ["C"], ["M"], ["C"], ["M"], ["C"], ["M"], ["C"]],
     [["C"], ["U"], [   ], ["M"], ["M"], ["M"], [   ], ["U"], ["C"]],
-    [["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"]]
-]
+    [["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"], ["C"]]     
+] 
 
-grille = create_map("map0")
+#grille = create_map("map0")
 
 """
     les Dictionnaires
@@ -39,7 +39,9 @@ dic_jeu = {
         'PV' : 3,
         'Niv': 0,
         'Score': 0,
-        'cooldown' : 0
+        'cooldown' : 0,
+        'obj': None,
+        'direction': 'bas'
 
     },
 
@@ -52,7 +54,9 @@ dic_jeu = {
     },
 
     "fantomes" : {
-    }
+    },
+
+    "mur" : {}
 
 }
 
@@ -63,11 +67,9 @@ settings = {
     "nombrefantome": 0
 }
 
-
 """
-    Faudrait que dans la fonction main, avant l'appel de la boucle énorme on est une première definition du timer
-    du style un int, ou même une variable dans un dico
-    Et comme ça à chaque appel de boucle on fait en sorte que le timer se modifie
+scenario = get_scenario("map0")
+main(scenario[2], g, scenario[0], scenario[1])
 """
 
 main(grille, g, dic_jeu, settings)
