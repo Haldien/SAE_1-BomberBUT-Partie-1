@@ -1,3 +1,4 @@
+import random
 
 # Valables pour le bomberman et les fantomes mais pas pour les bombes
 def case_valide(grille: list, y: int, x: int, dic_jeu) -> bool:
@@ -110,6 +111,78 @@ def get_scenario(nomMap:str) -> tuple[dict, dict, list[list[list[str]]]]:
 
     
     return (dic_jeu, settings, grille)
+
+
+
+
+def generer_element():
+
+    random_int = random.randint(1,100)
+
+    if 0 <= random_int <= 65:
+        return "M"
+    elif random_int <= 67:
+        return "U"
+    elif random_int <= 69:
+        return "E"
+    elif random_int <= 100:
+        pass
+
+
+def generer_grille(hauteur, largeur):
+
+    grille = list()
+
+    # Création de la grille vide
+    for y in range(hauteur+1):
+        current = list()
+        grille.append(current)
+        for x in range(largeur+1):
+            current.append([])
+
+    # Colonnes
+    for y in range(hauteur):
+        for x in range(largeur):
+            if y in [0, hauteur-1] or x in [0, largeur-1] or (y%2==0 and x%2==0):
+                grille[y][x].append("C")
+
+
+    # On place le joueur
+    while True:
+        y = random.randint(0, hauteur-1)
+        x = random.randint(0, largeur-1)
+
+        if not grille[y][x]:
+            grille[y][x].append("P")
+            pos_joueur = (y, x)
+            break
+
+    # On s'assure qu'au moins une prise ethernet a spawné
+    while True:
+        y = random.randint(0, hauteur - 1)
+        x = random.randint(0, largeur - 1)
+
+        if not grille[y][x]:
+            grille[y][x].append("E")
+            break
+
+    # On génère le reste des éléments
+    for y in range(1, hauteur-1):
+        for x in range(1, largeur-1):
+            if not grille[y][x]:
+                el = generer_element()
+                if el:
+                    grille[y][x].append(el)
+
+
+    # On dégage la zone du joueur
+    directions =  [(-1, 0), (0, -1), (1, 0), (0, 1)]
+
+    for direction in directions:
+        if "C" not in grille[pos_joueur[0] + direction[0]][pos_joueur[1] + direction[1]] and "E" not in grille[pos_joueur[0] + direction[0]][pos_joueur[1] + direction[1]]:
+            grille[pos_joueur[0] + direction[0]][pos_joueur[1] + direction[1]].clear()
+
+    return grille
 
 
     
