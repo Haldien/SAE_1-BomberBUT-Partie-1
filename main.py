@@ -3,7 +3,7 @@ from fantomes import *
 from bombes import *
 from timers import *
 from render import *
-from fonctions_utiles import *
+from fonctions_utiles import case_valide
 from time import sleep
 
 """
@@ -18,12 +18,6 @@ avec le jeu au centre de l'écran
 
 
 """
-
-
-
-
-
-
 
 def action_bomber(g, grille,settings, touche: str, dic_jeu):
     # Mappings des touches vers les vecteurs de mouvements correspondant
@@ -88,11 +82,13 @@ def explosions(grille, g, dic_jeu)->list[ObjetGraphique]:
 MAIN
 """
 def main(grille, g, dic_jeu, settings):
-
     settings["size"] = dimensions_de_case(grille)
+    settings["offset"] = (0,0)
 
     DEFAULT_SETTING = settings.copy()
     OnGameSettings = DEFAULT_SETTING.copy()
+    
+    
     print(OnGameSettings)
     fantomes = dic_jeu["fantomes"]
     ethernet = dic_jeu["ethernet"]
@@ -104,9 +100,11 @@ def main(grille, g, dic_jeu, settings):
 
 
     objets_graphiques_explosions = list()
-    render_undestructible(g, grille)
+    render_undestructible(g, grille, ["offset"])
     spawn_bomber(g,dic_jeu, OnGameSettings)
-    get_wall(g, grille, dic_jeu)
+    create_object(g, grille, dic_jeu)
+
+    print(dic_jeu)
 
 
 
@@ -132,8 +130,8 @@ def main(grille, g, dic_jeu, settings):
 
                 print("fantome:", dic_jeu["fantomes"])
                 print("ethernet:", dic_jeu["ethernet"])
-                print(f"TIMER : {OnGameSettings['timer']}              TIMERFANTOME : {OnGameSettings['timerfantome']}")
                 """
+                print(f"TIMER : {OnGameSettings['timer']}              TIMERFANTOME : {OnGameSettings['timerfantome']}")
                 print(dic_jeu["bomber"].niv)
                 """
                 1. décision de l'action du bomber
