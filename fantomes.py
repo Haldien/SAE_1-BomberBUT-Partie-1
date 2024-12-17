@@ -40,7 +40,9 @@ def apparition_fantomes(g,grille:list, dic_jeu:dict, settings:dict) -> None:
     La taille du dictionnaire correspond aux nombres de fantômes présents dans la partie actuelle.
     """
     entite = dic_jeu["fantomes"]
-    pos_prise = dic_jeu["ethernet"]["pos"]
+    pos_prise = []
+    for pos in dic_jeu["ethernet"]:
+        pos_prise += [pos]
     shuffle(pos_prise)
     if pos_prise == []:
         return 
