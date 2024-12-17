@@ -143,7 +143,7 @@ def main(grille, g, dic_jeu, settings):
                 5. apparition de nouveaux fantômes
                 6. réduction des timers et les explosions
                 """
-                dic_jeu["bomber"].action_bomber( grille, touche, dic_jeu)
+                dic_jeu["bomber"].action_bomber(g, grille, touche, dic_jeu)
                 
                 dep_bomber(dic_jeu["bomber"])
                 resoudre_action()
