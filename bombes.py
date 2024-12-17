@@ -40,7 +40,7 @@ def cases_relatives_vers_absolues(coord, dic_cases_affectees_relatives):
 def calculer_cases_affectees(grille, coord, dic_jeu) -> dict[str:list[tuple[int]]]:
     
     # "La portée de ses bombes, égale à 1 + Niv / 2" = +1 case de portée tous les 2 niveaux, à part au niveau 2 où il gagne directement 1 case de portée
-    portee = int(1 + dic_jeu["bomber"]["Niv"] / 2)
+    portee = int(1 + dic_jeu["bomber"].niv // 2)
 
 
     dic_cases_affectees_relatives = {
@@ -107,20 +107,22 @@ def exploser_bombe(grille, g, coord, dic_jeu):
             if "M" in grille[coord_explosion[0]][coord_explosion[1]]:
                 dic_jeu["mur"][(coord_explosion[1], coord_explosion[0])].supprimerEntite()
                 grille[coord_explosion[0]][coord_explosion[1]].remove("M")
-                dic_jeu["bomber"]["Score"] += 1
+                dic_jeu["bomber"].score += 1
             # à voir
             if "P" in grille[coord_explosion[0]][coord_explosion[1]]:
-                dic_jeu["bomber"]["PV"] -= 1
+                dic_jeu["bomber"].pv -= 1
+            
             for el in grille[coord_explosion[0]][coord_explosion[1]]:
                 if "F" in el:
                     # el est un fantome maintenant
                     
                     
-                    dic_jeu["fantomes"][el]["obj"].supprimerEntite()
+                    dic_jeu["fantomes"][el].supprimerEntite()
                     
                     grille[coord_explosion[0]][coord_explosion[1]].remove(el)
                     dic_jeu["fantomes"].pop(el)
                     grille[coord_explosion[0]][coord_explosion[1]].append("U")
+            
             if "U" in grille[coord_explosion[0]][coord_explosion[1]]:
                 grille[coord_explosion[0]][coord_explosion[1]].remove("U")
             if "B" in grille[coord_explosion[0]][coord_explosion[1]]:
