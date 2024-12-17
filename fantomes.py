@@ -1,38 +1,9 @@
 from random import randint, shuffle
 from fonctions_utiles import *
+from affiche import *
 
 #Format Liste Fantome, tuple les prises sont bloquantes
 
-def deplacer_fantomes(grille:list, dic_jeu) -> None:
-    """
-    Cette fonction prend en paramètre une grille et une liste d'entités
-    Il va update pour chaque fantôme présent dans la partie
-    """
-    for fantome in dic_jeu["fantomes"]:
-        pos_possible = get_pos_possible(grille, dic_jeu["fantomes"][fantome]["pos"], dic_jeu)
-
-        if pos_possible != []:
-            ancien_y,ancien_x = dic_jeu["fantomes"][fantome]["pos"]
-            y_pos, x_pos = pos_possible[0]
-
-            if pos_possible[0] == (ancien_y,ancien_x-1):
-                dic_jeu["fantomes"][fantome]["direction"] = "gauche"
-            elif pos_possible[0] == (ancien_y,ancien_x+1):
-                dic_jeu["fantomes"][fantome]["direction"] = "droite"
-            elif pos_possible[0] == (ancien_y-1,ancien_x):
-                dic_jeu["fantomes"][fantome]["direction"] = "haut"
-            elif pos_possible[0] == (ancien_y+1,ancien_x):
-                dic_jeu["fantomes"][fantome]["direction"] = "bas"
-    
-
-
-            grille[ dic_jeu["fantomes"][fantome]["pos"][0] ][ dic_jeu["fantomes"][fantome]["pos"][1] ].remove(fantome)
-            grille[y_pos][x_pos] += [fantome]
-            dic_jeu["fantomes"][fantome]["pos"] = (y_pos, x_pos)
-
-
-
-    return
 
 
 def get_pos_possible(grille:list, pos:tuple, dic_jeu) -> list:
@@ -57,7 +28,7 @@ def get_pos_possible(grille:list, pos:tuple, dic_jeu) -> list:
     shuffle(case_disponible)
     return case_disponible
 
-def apparition_fantomes(grille:list, dic_jeu:dict, settings:dict) -> None:
+def apparition_fantomes(g,grille:list, dic_jeu:dict, settings:dict) -> None:
     """
     Prend en paramètre une grille, un dictionnaire de fantômes, et un dictionnaire de prises
 
@@ -82,7 +53,7 @@ def apparition_fantomes(grille:list, dic_jeu:dict, settings:dict) -> None:
     shuffle(case_disponible)
     new_entity = f"F{settings["nombrefantome"]}"
     settings["nombrefantome"] += 1
-    entite[new_entity] = {"obj": "objetGraphique", "pos": (case_disponible[0][0],case_disponible[0][1]), "direction": "bas", "index_sprite": 0}
+    entite[new_entity] = Fantome(g, fantome_sprite, settings["size"], case_disponible[0][0], case_disponible[0][1], (0,0))
     grille[case_disponible[0][0]][case_disponible[0][1]] += [new_entity]
     
 def get_Ethernet(grille:list) -> list :
@@ -98,28 +69,7 @@ def get_Ethernet(grille:list) -> list :
                     prise += [(i,j)]
     return prise
 
-def attaque_fantome(grille:list, dic_jeu:dict) -> None:
-    """
-        Note au développeur: Le player pos peut directement évoluer avec le dico bomber 
 
-        Cette fontion prend en paramètre une grille de jeu, le couple de coordonnée du joueur et les entités 
-
-        Elle permet d'appliquer des dégâts au bomber si un fantôme se situe dans la case adjacente à celui ci.
-
-        Elle ne renvoie rien
-    """
-    entite = dic_jeu["fantomes"]
-    posFantome = []
-    for fantome in entite:
-        posFantome += [entite[fantome]["pos"]]
-    x_bomber, y_bomber = dic_jeu["bomber"]["pos"]
-    for pos in posFantome:
-        x_fant, y_fant = pos
-        if est_proche(x_fant, y_fant, x_bomber, y_bomber):
-            dic_jeu["bomber"]["PV"] -= 1
-            return
-
-    return
 
 def est_proche(x_fant:int,y_fant:int, x_bomb:int, y_bomb:int) -> bool:
     """
