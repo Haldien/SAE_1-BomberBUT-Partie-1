@@ -6,14 +6,9 @@ def poser_bombe(g, grille, dic_jeu, settings, y: int, x: int):
         grille[y][x].append("B")
         ajouter_a_dic_bombes(g, dic_jeu,settings, y, x)
 
-
 def ajouter_a_dic_bombes(g, dic_jeu,settings, y, x):
     dic_jeu["bombes"][(y, x)] = {'timer': 6, 'obj': Bombes(g, dic_jeu['sprite']["bombes"],settings["size"], y, x, (0,0) )}
     
-
-
-
-
 def case_valide_pour_explosion(grille, y, x) -> bool:
     # Les cases non valides sont celles en dehors de la grille et les colonnes. Les prises ethernet sont considérées comme valides pour une explosion
     if not (0 <= y <= len(grille) - 1 and 0 <= x <= len(grille[0]) - 1) or "C" in grille[y][x]:
@@ -35,7 +30,6 @@ def cases_relatives_vers_absolues(coord, dic_cases_affectees_relatives):
             dic_cases_affectees_absolues[direction].append((coord[0] + el[0], coord[1] + el[1]))
 
     return dic_cases_affectees_absolues
-
 
 def calculer_cases_affectees(grille, coord, dic_jeu) -> dict[str:list[tuple[int]]]:
     
@@ -115,7 +109,6 @@ def exploser_bombe(grille, g, coord, dic_jeu):
             for el in grille[coord_explosion[0]][coord_explosion[1]]:
                 if "F" in el:
                     # el est un fantome maintenant
-                    
                     
                     dic_jeu["fantomes"][el].supprimerEntite()
                     
