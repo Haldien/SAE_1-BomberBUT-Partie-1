@@ -2,15 +2,32 @@ from tkiteasy import ObjetGraphique
 from time import sleep
 from affiche import *
 
-TAILLE_FENETRE = (1200, 1000) # (x, y)
+#TAILLE_FENETRE = (1200, 1000) # (x, y)
+TAILLE_FENETRE = (1280, 720) # (x, y)
 
+"""
+
+
+"""
+"""
 
 def dimensions_de_case(grille:list[list[list[str]]])-> tuple[int, int]:
     global TAILLE_FENETRE
 
     # dimmensions de case retournées : tuple de la forme (x, y) !!
-    return TAILLE_FENETRE[0] // len(grille[0]), TAILLE_FENETRE[1] // len(grille)
+    return TAILLE_FENETRE[1] // len(grille[0]), TAILLE_FENETRE[1] // len(grille)
 
+"""
+
+def dimensions_de_case(grille:list[list[list[str]]])-> tuple[int, int]:
+    """
+    un redimensionnement pour une taille plus petite
+    """
+    global TAILLE_FENETRE
+
+    # dimmensions de case retournées : tuple de la forme (x, y) !!
+    return round((TAILLE_FENETRE[1])*.9) // len(grille), round((TAILLE_FENETRE[1])*.9) // len(grille)
+    
 
 def render(grille, g, dic_jeu, objets_graphiques = None)-> list[ObjetGraphique]:
 
@@ -99,53 +116,31 @@ def render_undestructible(g, grille:list[list[list[str]]]) -> None:
             if "C" in grille[y][x]:
                 g.dessinerRectangle(coord_x,coord_y, dim_case[0], dim_case[1],"white")
 
-def spawn_bomber(g, dic_jeu, grille) -> None:
-    dim_case = dimensions_de_case(grille)
+def spawn_bomber(g, dic_jeu, settings):
+    dic_jeu["bomber"]["obj"] = Bomber(g, dic_jeu["sprite"]["bomber"], settings["size"], dic_jeu["bomber"]["pos"][0], dic_jeu["bomber"]["pos"][1],(0,0))
 
-    """
-        les sprites du bomber
-    """
-    bunny = {
-        "bas" : ["asset/bunny/down/down1.png","asset/bunny/down/down2.png"],
-        "gauche": ["asset/bunny/left/left1.png","asset/bunny/left/left2.png"],
-        "droite": ["asset/bunny/right/right1.png", "asset/bunny/right/right2.png"],
-        "haut": ["asset/bunny/up/up1.png", "asset/bunny/up/up2.png"],
-        "pose": ["asset/bunny/pose/poseBombe.png"]
-    } 
+def spawn_fantome(g, dic_jeu, settings):
+    for i in dic_jeu["fantomes"]:
+        if dic_jeu["fantomes"][i]["obj"] == "objetGraphique":
+            dic_jeu["fantomes"][i]["obj"] = Fantome(g, dic_jeu["sprite"]["fantomes"], settings["size"], dic_jeu["fantomes"][i]["pos"][0], dic_jeu["fantomes"][i]["pos"][1],(0,0))
 
-    dic_jeu["bomber"]["obj"] = Bomber(g, bunny,dim_case, dic_jeu["bomber"]["pos"][0]*dim_case[1], dic_jeu["bomber"]["pos"][1]*dim_case[0])
+def dep_fantome(dic_jeu):
+    for i in dic_jeu["fantomes"]:
+        dic_jeu["fantomes"][i]["obj"].deplacer(dic_jeu["fantomes"][i]["pos"], dic_jeu["fantomes"][i]["direction"])
 
-def render_depBomber(dic_jeu)  -> None:
+def dep_bomber(dic_jeu):
     dic_jeu["bomber"]["obj"].deplacer(dic_jeu["bomber"]["pos"], dic_jeu["bomber"]["direction"])
 
-def render_depFantome(dic_jeu)  -> None:
-    for i in dic_jeu['fantomes']:
-        dic_jeu["fantomes"][i][0].deplacer(dic_jeu["fantomes"][i][1], dic_jeu["fantomes"][i][2])
 
-def spawn_fantome(g, dic_jeu, grille) -> None:
-    bunny = {
-        "bas" : ["asset/bunny/down/down1.png","asset/bunny/down/down2.png"],
-        "gauche": ["asset/bunny/left/left1.png","asset/bunny/left/left2.png"],
-        "droite": ["asset/bunny/right/right1.png", "asset/bunny/right/right2.png"],
-        "haut": ["asset/bunny/up/up1.png", "asset/bunny/up/up2.png"]
-    }   
+
+def get_wall(g, grille: list[list[list[str]]], dic_jeu) -> None:
     dim_case = dimensions_de_case(grille)
-
-    for i in dic_jeu["fantomes"]:
-        if dic_jeu["fantomes"][i][0] == "objetGraphique":
-            dic_jeu["fantomes"][i][0] = Fantome(g, bunny, dim_case, dic_jeu["fantomes"][i][1][0]*dim_case[1],  dic_jeu["fantomes"][i][1][1]*dim_case[0] )
-
-
-
-def get_wall(g, grille: list[list[list[str]]]) -> dict:
-    dim_case = dimensions_de_case(grille)
-    allWall = {}
     for y in range(len(grille)):
         for x in range(len(grille[0])):
             if "M" in grille[y][x]:
-                allWall[(x,y)] = Mur(g, {"bas": ["sprites/mur.png"] },dim_case, y*dim_case[1], x*dim_case[0])
+                dic_jeu["mur"][(x,y)] = Mur(g, {"bas": ["sprites/mur.png"] },dim_case, y, x,(0,0))
     
-    return allWall
 
 
-    
+
+
