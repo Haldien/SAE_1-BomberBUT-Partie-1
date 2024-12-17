@@ -1,14 +1,15 @@
 from render import *
 
-def poser_bombe(grille, dic_jeu, y: int, x: int):
+def poser_bombe(g, grille, dic_jeu, settings, y: int, x: int):
 
     if "B" not in grille[y][x]:
         grille[y][x].append("B")
-        ajouter_a_dic_bombes(dic_jeu, y, x)
+        ajouter_a_dic_bombes(g, dic_jeu,settings, y, x)
 
 
-def ajouter_a_dic_bombes(dic_jeu, y, x):
-    dic_jeu["bombes"][(y, x)] = 6
+def ajouter_a_dic_bombes(g, dic_jeu,settings, y, x):
+    dic_jeu["bombes"][(y, x)] = {'timer': 6, 'obj': Bombes(g, dic_jeu['sprite']["bombes"],settings["size"], y, x, (0,0) )}
+    
 
 
 
@@ -93,7 +94,8 @@ def exploser_bombe(grille, g, coord, dic_jeu):
     dic_cases_affectees = calculer_cases_affectees(grille, coord, dic_jeu)
 
     # Supprime la bombe du dic.
-    dic_jeu["bombes"].pop(coord)
+    dic_jeu["bombes"][coord]['obj'].supprimerEntite()
+    del dic_jeu["bombes"][coord]
     # Supprime la réprésentation de la bombe de la grille
     grille[coord[0]][coord[1]].remove("B")
 
@@ -112,9 +114,9 @@ def exploser_bombe(grille, g, coord, dic_jeu):
             for el in grille[coord_explosion[0]][coord_explosion[1]]:
                 if "F" in el:
                     # el est un fantome maintenant
-                    print(dic_jeu["fantomes"][el][0])
                     
-                    dic_jeu["fantomes"][el][0].supprimerEntite()
+                    
+                    dic_jeu["fantomes"][el]["obj"].supprimerEntite()
                     
                     grille[coord_explosion[0]][coord_explosion[1]].remove(el)
                     dic_jeu["fantomes"].pop(el)
