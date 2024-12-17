@@ -5,7 +5,7 @@ from time import sleep
 from tkinter.font import Font
 from typing import Literal, NamedTuple, TypeAlias
 
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk #type: ignore
 
 # fmt: off
 _LiteralColor: TypeAlias = Literal[
