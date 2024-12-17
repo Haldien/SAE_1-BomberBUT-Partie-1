@@ -12,9 +12,10 @@ WIDTH, HEIGHT = 1200, 800
 """
 class Entity:
     def __init__(self, g:object, sprite:dict, size:tuple, y:int,x:int, offset:tuple[int, int]):
-        self.x, self.y = x+offset[0],y+offset[1]
+        self.x, self.y =  x ,y
         self.sprite = sprite
         self.size = size
+        self.offset = size
         self.g = g
         self.state = "bas"
         self.indexState = 0
@@ -30,7 +31,7 @@ class Entity:
         if self.indexState >= len(self.sprite[state]):
             self.indexState = 0
 
-        self.obj = self.g.afficherImage( self.x*self.size[0], self.y*self.size[0], self.size, self.sprite[state][self.indexState])
+        self.obj = self.g.afficherImage(self.x*self.size[0], self.y*self.size[0], self.size, self.sprite[state][self.indexState])
     
     def supprimerEntite(self):
         self.g.supprimer(self.obj)
@@ -65,6 +66,10 @@ class Ethernet(Entity):
     
     def fait_apparaitre():
         pass
+
+class Upgrade(Entity):
+    def __init__(self, g, sprite, size, y, x, offset):
+        super().__init__(g, sprite, size, y, x, offset)
 
 class Bombes(Entity):
     def __init__(self, g:object, sprite:dict, size:tuple, x:int,y:int, offset:tuple[int, int]):
@@ -230,9 +235,11 @@ class Bomber(Mob):
         self.cooldown = 0
         self.score = 0
         
-    def deplacer_bomber(self, grille, y: int, x: int):
+    def deplacer_bomber(self, grille, y: int, x: int, dic_jeu):
 
         if "U" in grille[y][x]:
+            dic_jeu["upgrade"][(x,y)].supprimerEntite()
+            del dic_jeu["upgrade"][(x,y)]
             grille[y][x].remove("U")
 
             #on limite le niveau à 4
@@ -281,8 +288,8 @@ class Bomber(Mob):
         # Mouvements
         if touche in ["z", "q", "s", "d"] :
 
-          if not case_valide(grille, dic_jeu["bomber"]["pos"][0] + mouvements[touche][0],
-                                                      dic_jeu["bomber"]["pos"][1] + mouvements[touche][1], dic_jeu):
+          if not case_valide(grille, self.y + mouvements[touche][0],
+                                                      self.x + mouvements[touche][1], dic_jeu):
             while True :
 
                 touche = g.attendreTouche()
@@ -290,16 +297,23 @@ class Bomber(Mob):
                 if touche in ["space", "Return"]:
                     break
 
-                if touche in ["z", "q", "s", "d"] and case_valide(grille, dic_jeu["bomber"]["pos"][0] + mouvements[touche][0],
-                                                      dic_jeu["bomber"]["pos"][1] + mouvements[touche][1], dic_jeu):
-                    deplacer_bomber(grille, dic_jeu["bomber"]["pos"][0] + mouvements[touche][0],
-                                    dic_jeu["bomber"]["pos"][1] + mouvements[touche][1], dic_jeu)
+                if touche in ["z", "q", "s", "d"] and case_valide(grille, self.y + mouvements[touche][0], self.x + mouvements[touche][1], dic_jeu):
+                    match(touche):
+                        case "z":
+                            self.state = "haut"
+                        case "q":
+                            self.state= "gauche"
+                        case "s":
+                            self.state = "bas"
+                        case "d":
+                            self.state = "droite"
+                    self.deplacer_bomber(grille, self.y + mouvements[touche][0], self.x + mouvements[touche][1], dic_jeu)
                     break
                     
         # Cas normal
           else:
-            deplacer_bomber(grille, dic_jeu["bomber"]["pos"][0] + mouvements[touche][0],
-                            dic_jeu["bomber"]["pos"][1] + mouvements[touche][1], dic_jeu)
+            self.deplacer_bomber(grille, self.y + mouvements[touche][0],
+                            self.x+ mouvements[touche][1], dic_jeu)
           
         if touche == "space":
             self.state = "pose"
@@ -400,4 +414,3 @@ fantome_sprite = {
 bombe_sprite = {
         "bas" : ["sprites/bombe.png","sprites/bombe1.png", "sprites/bombe2.png", "sprites/bombe3.png"] 
     }
-
