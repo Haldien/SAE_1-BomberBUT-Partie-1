@@ -9,27 +9,26 @@ def deplacer_fantomes(grille:list, dic_jeu) -> None:
     Il va update pour chaque fantôme présent dans la partie
     """
     for fantome in dic_jeu["fantomes"]:
-        pos_possible = get_pos_possible(grille, dic_jeu["fantomes"][fantome][1], dic_jeu)
+        pos_possible = get_pos_possible(grille, dic_jeu["fantomes"][fantome]["pos"], dic_jeu)
 
         if pos_possible != []:
-            ancien_y,ancien_x = dic_jeu["fantomes"][fantome][1]
+            ancien_y,ancien_x = dic_jeu["fantomes"][fantome]["pos"]
             y_pos, x_pos = pos_possible[0]
 
-            print(dic_jeu["fantomes"][fantome][1], pos_possible[0])
             if pos_possible[0] == (ancien_y,ancien_x-1):
-                dic_jeu["fantomes"][fantome][2] = "gauche"
+                dic_jeu["fantomes"][fantome]["direction"] = "gauche"
             elif pos_possible[0] == (ancien_y,ancien_x+1):
-                dic_jeu["fantomes"][fantome][2] = "droite"
+                dic_jeu["fantomes"][fantome]["direction"] = "droite"
             elif pos_possible[0] == (ancien_y-1,ancien_x):
-                dic_jeu["fantomes"][fantome][2] = "haut"
+                dic_jeu["fantomes"][fantome]["direction"] = "haut"
             elif pos_possible[0] == (ancien_y+1,ancien_x):
-                dic_jeu["fantomes"][fantome][2] = "bas"
+                dic_jeu["fantomes"][fantome]["direction"] = "bas"
     
 
 
-            grille[ dic_jeu["fantomes"][fantome][1][0] ][ dic_jeu["fantomes"][fantome][1][1] ].remove(fantome)
+            grille[ dic_jeu["fantomes"][fantome]["pos"][0] ][ dic_jeu["fantomes"][fantome]["pos"][1] ].remove(fantome)
             grille[y_pos][x_pos] += [fantome]
-            dic_jeu["fantomes"][fantome][1] = (y_pos, x_pos)
+            dic_jeu["fantomes"][fantome]["pos"] = (y_pos, x_pos)
 
 
 
@@ -83,7 +82,7 @@ def apparition_fantomes(grille:list, dic_jeu:dict, settings:dict) -> None:
     shuffle(case_disponible)
     new_entity = f"F{settings["nombrefantome"]}"
     settings["nombrefantome"] += 1
-    entite[new_entity] = ["objetGraphique", (case_disponible[0][0],case_disponible[0][1]), "bas"]
+    entite[new_entity] = {"obj": "objetGraphique", "pos": (case_disponible[0][0],case_disponible[0][1]), "direction": "bas", "index_sprite": 0}
     grille[case_disponible[0][0]][case_disponible[0][1]] += [new_entity]
     
 def get_Ethernet(grille:list) -> list :
@@ -112,12 +111,11 @@ def attaque_fantome(grille:list, dic_jeu:dict) -> None:
     entite = dic_jeu["fantomes"]
     posFantome = []
     for fantome in entite:
-        posFantome += [entite[fantome][1]]
+        posFantome += [entite[fantome]["pos"]]
     x_bomber, y_bomber = dic_jeu["bomber"]["pos"]
     for pos in posFantome:
         x_fant, y_fant = pos
         if est_proche(x_fant, y_fant, x_bomber, y_bomber):
-            print("Tu es touché par un fantome"*6)
             dic_jeu["bomber"]["PV"] -= 1
             return
 
