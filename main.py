@@ -112,7 +112,7 @@ def main(grille, g, dic_jeu, settings):
 
         
     
-    while OnGameSettings["timer"] > 0 and dic_jeu["bomber"]["PV"] > 0:
+    while OnGameSettings["timer"] > 0 and dic_jeu["bomber"].pv > 0:
 
         touche = g.recupererTouche()
 
@@ -125,8 +125,8 @@ def main(grille, g, dic_jeu, settings):
 
             if touche in ["z", "q", "s", "d", "space", "Return"]:
                 # affichage dans le terminal pour les tests
-                """
                 affichage_grille(grille)
+                """
                 print("bombes:", dic_jeu["bombes"])
                 print("bomber:", dic_jeu["bomber"])
 
@@ -134,6 +134,7 @@ def main(grille, g, dic_jeu, settings):
                 print("ethernet:", dic_jeu["ethernet"])
                 print(f"TIMER : {OnGameSettings['timer']}              TIMERFANTOME : {OnGameSettings['timerfantome']}")
                 """
+                print(dic_jeu["bomber"].niv)
                 """
                 1. décision de l'action du bomber
                 2. résolution de l'action
@@ -142,32 +143,39 @@ def main(grille, g, dic_jeu, settings):
                 5. apparition de nouveaux fantômes
                 6. réduction des timers et les explosions
                 """
-                action_bomber(g, grille,OnGameSettings, touche, dic_jeu)
-                dep_bomber(dic_jeu)
-
+                dic_jeu["bomber"].action_bomber( grille, touche, dic_jeu)
+                
+                dep_bomber(dic_jeu["bomber"])
                 resoudre_action()
+                print(dic_jeu["fantomes"])
 
                 updater_timers(dic_jeu, OnGameSettings)
+    
 
                 if len(fantomes) > 0:
-                    if dic_jeu["bomber"]["cooldown"] <= 0:  # Dans le cas où il y a plusieurs dégâts en même temps, ça ne s'additionne pas pendant une courte durée
-                        attaque_fantome(grille, dic_jeu)
+                    if dic_jeu["bomber"].cooldown <= 0:  # Dans le cas où il y a plusieurs dégâts en même temps, ça ne s'additionne pas pendant une courte durée
+                        #attaque_fantome(dic_jeu)
+                        pass
+                    for fantome in dic_jeu["fantomes"]:
+                        dic_jeu["fantomes"][fantome].deplacer_fantomes(grille, dic_jeu, fantome)
+              
                     
                     
                     
-
+                
                 if OnGameSettings["timerfantome"] == 0:
-                    apparition_fantomes(grille, dic_jeu, OnGameSettings)
-                    spawn_fantome(g, dic_jeu,OnGameSettings)
+                    apparition_fantomes(g, grille, dic_jeu, OnGameSettings)
+    
                     OnGameSettings["timerfantome"] = DEFAULT_SETTING["timerfantome"]
 
                 objets_graphiques_explosions = explosions(grille, g, dic_jeu)
+                """
 
                 dep_fantome(dic_jeu)
-                deplacer_fantomes(grille, dic_jeu)
 
             #objets_graphiques = render(grille, g, dic_jeu, objets_graphiques)
 
+                """
 
     for i in range(3):
         print("\n")
