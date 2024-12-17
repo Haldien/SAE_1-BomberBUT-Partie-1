@@ -1,7 +1,3 @@
-
-
-
-
 def pos_bomber(grille:list[list[list[str]]])->list[int]:
     for y in range(len(grille)):
         for x in range(len(grille[0])):
@@ -11,6 +7,8 @@ def pos_bomber(grille:list[list[list[str]]])->list[int]:
 def deplacer_bomber(grille, y: int, x: int, dic_jeu):
 
     if "U" in grille[y][x]:
+        dic_jeu["upgrade"][(y,x)].supprimerEntite()
+
         grille[y][x].remove("U")
 
         #on limite le niveau à 4
@@ -29,10 +27,3 @@ def level_up(dic_jeu):
 
     if dic_jeu["bomber"]["Niv"] in [1, 3]:
         dic_jeu["bomber"]["PV"] += 1
-
-
-
-
-
-
-
