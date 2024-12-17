@@ -41,16 +41,21 @@ dic_jeu = {
     },
 
     "ethernet" : {
-        "pos" : [(3,6)],
-        "obj" : None
+
     },
 
     "fantomes" : {
 
     },
 
-    "mur" : {},
+    "mur" : {
 
+    },
+
+    "upgrade" : {
+        
+    }
+ 
 
 }
 
@@ -58,18 +63,16 @@ settings = {
     "timer" : 200,
     "timerfantome": 30,
     "nombrefantome": 0,
-    "size": None
+    "size": None,
+    "offset" : None
 }
 
 """
 scenario = get_scenario("map0")
 main(scenario[2], g, scenario[0], scenario[1])
 
+scenario = get_scenario("map1")
+main(scenario[2], g, scenario[0], scenario[1])
 """
-
-
-
-
-
 
 main(grille, g, dic_jeu, settings)
