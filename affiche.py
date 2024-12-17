@@ -8,16 +8,40 @@ WIDTH, HEIGHT = 1200, 800
                     Classe Principale
 
 """
+"""
+def create_sprite(g, sprite:dict, settings:dict, dic_jeu:dict, entite:str) -> None:
+
+    return g.afficherImage(
+        dic_jeu[entite]["pos"][1]*settings["size"][1], # x, graphique
+        dic_jeu[entite]["pos"][0]*settings["size"][0], # y, graphique
+        settings["size"], # la valeur de redimension
+        sprite[dic_jeu[entite]["direction"]][dic_jeu[entite]["index_sprite"]]) # le sprite de l'entité à un certain stade
+
+def deplacer_entite(g, dic_jeu, sprite:dict, settings, direct, entite):
+    g.supprimer(dic_jeu[entite]["obj"])
+
+    dic_jeu[entite]["index_sprite"] += 1
+    if dic_jeu[entite]["index_sprite"] >= len(sprite[direct]):
+        dic_jeu[entite]["index_sprite"] = 0
+
+    dic_jeu[entite]["obj"] = g.afficherImage(
+        dic_jeu[entite]["pos"][1]*settings["size"][1],
+        dic_jeu[entite]["pos"][0]*settings["size"][0],
+        settings["size"],
+        sprite[direct][dic_jeu[entite]["index_sprite"]]
+        )
+"""
+
 class Entity:
-    def __init__(self, g:object, sprite:dict, size:tuple, y:int,x:int):
-        self.x, self.y = x,y
+    def __init__(self, g:object, sprite:dict, size:tuple, y:int,x:int, offset:tuple[int, int]):
+        self.x, self.y = x+offset[0],y+offset[1]
         self.sprite = sprite
         self.size = size
         self.g = g
         self.state = "bas"
         self.indexState = 0
         #self.obj = self.g.dessinerRectangle(self.x, self.y, self.size[1], self.size[0], "red")
-        self.obj = self.g.afficherImage(self.x, self.y, self.size , sprite["bas"][self.indexState] )
+        self.obj = self.g.afficherImage(self.x*self.size[0], self.y*self.size[0], self.size , sprite["bas"][self.indexState] )
 
     def ChangeSprite(self,direct: str):
         self.Model_Choice(direct)
@@ -43,15 +67,13 @@ class Entity:
 
 
 class Mob(Entity):
-    def __init__(self, g:object, sprite:dict, size:tuple, x:int,y:int):
-        super().__init__(g, sprite, size, x,y )
+    def __init__(self, g:object, sprite:dict, size:tuple, x:int,y:int, offset:tuple[int, int]):
+        super().__init__(g, sprite, size, x,y, offset)
 
     def deplacer(self, coords:tuple[int,int], direct:str) -> None:
-        # Changement de sprite
+        # Changement de sprite et de nouvelle coordonnées graphiques
         self.x = coords[1]*self.size[0]
         self.y = coords[0]*self.size[1]
-        print(self.x, self.y)
-        self.g.deplacer(self.obj, coords[0], coords[1])
         self.ChangeSprite(direct)
 
 
@@ -61,22 +83,36 @@ class Mob(Entity):
 
 
 class Ethernet(Entity):
-    def __init__(self, g:object, sprite:dict, size:tuple, x:int,y:int):
-        super().__init__(g, sprite, size, x,y )
+    def __init__(self, g:object, sprite:dict, size:tuple, x:int,y:int, offset:tuple[int, int]):
+        super().__init__(g, sprite, size, x,y, offset)
     
     def fait_apparaitre():
         pass
 
 class Bombes(Entity):
-    def __init__(self, g:object, sprite:dict, size:tuple, x:int,y:int):
-        super().__init__(g, sprite, size, x,y )
+    def __init__(self, g:object, sprite:dict, size:tuple, x:int,y:int, offset:tuple[int, int]):
+        super().__init__(g, sprite, size, x,y, offset)
     
-    def explose(self):
-        pass
+    def ignite(self, timer:int):
+        self.g.supprimer(self.obj)
+        
+        if timer < 2:
+            self.indexState = 3
+            self.obj = self.g.afficherImage(self.x*self.size[0], self.y*self.size[0], self.size,self.sprite[self.state][self.indexState])
+        elif timer < 3:
+            self.indexState = 2
+            self.obj = self.g.afficherImage(self.x*self.size[0], self.y*self.size[0], self.size,self.sprite[self.state][self.indexState])
+        elif timer < 4:
+            self.indexState = 1
+            self.obj = self.g.afficherImage(self.x*self.size[0], self.y*self.size[0], self.size,self.sprite[self.state][self.indexState])
+        else:
+            self.indexState = 0
+            self.obj = self.g.afficherImage(self.x*self.size[0], self.y*self.size[0], self.size,self.sprite[self.state][self.indexState])
+
 
 class Mur(Entity):
-    def __init__(self, g:object, sprite:dict, size:tuple, x:int,y:int):
-        super().__init__(g, sprite, size, x,y )
+    def __init__(self, g:object, sprite:dict, size:tuple, x:int,y:int, offset:tuple[int, int]):
+        super().__init__(g, sprite, size, x,y, offset)
 
 """
 
@@ -84,16 +120,15 @@ class Mur(Entity):
 
 """
 class Bomber(Mob):
-    def __init__(self, g:object, sprite:dict, size:tuple, x:int,y:int):
-        super().__init__(g, sprite, size, x,y )
+    def __init__(self, g:object, sprite:dict, size:tuple, x:int,y:int, offset:tuple[int, int]):
+        super().__init__(g, sprite, size, x,y, offset)
+        
 
-    def poseBombe(self):
-        pass
 
 
 class Fantome(Mob):
-    def __init__(self, g:object, sprite:dict, size:tuple, x:int,y:int):
-        super().__init__(g, sprite, size, x,y )
+    def __init__(self, g:object, sprite:dict, size:tuple, x:int,y:int, offset:tuple[int, int]):
+        super().__init__(g, sprite, size, x,y, offset)
 
 """
 
