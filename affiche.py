@@ -281,17 +281,26 @@ class Bomber(Mob):
         # Mouvements
         if touche in ["z", "q", "s", "d"] :
 
-          while not case_valide(grille, dic_jeu["bomber"]["pos"][0] + mouvements[touche][0],
-                                                      dic_jeu["bomber"]["pos"][1] + mouvements[touche][1], dic_jeu) and touche in ["z", "q", "s", "d"] :
+          if not case_valide(grille, dic_jeu["bomber"]["pos"][0] + mouvements[touche][0],
+                                                      dic_jeu["bomber"]["pos"][1] + mouvements[touche][1], dic_jeu):
+            while True :
 
-            touche = g.attendreTouche()
+                touche = g.attendreTouche()
 
-            if touche in ["space", "Return"]:
-              break
+                if touche in ["space", "Return"]:
+                    break
 
-          if touche in ["z", "q", "s", "d"] :
-              deplacer_bomber(grille, dic_jeu["bomber"]["pos"][0] + mouvements[touche][0], dic_jeu["bomber"]["pos"][1] + mouvements[touche][1], dic_jeu)
-        # Dépose un bombe
+                if touche in ["z", "q", "s", "d"] and case_valide(grille, dic_jeu["bomber"]["pos"][0] + mouvements[touche][0],
+                                                      dic_jeu["bomber"]["pos"][1] + mouvements[touche][1], dic_jeu):
+                    deplacer_bomber(grille, dic_jeu["bomber"]["pos"][0] + mouvements[touche][0],
+                                    dic_jeu["bomber"]["pos"][1] + mouvements[touche][1], dic_jeu)
+                    break
+                    
+        # Cas normal
+          else:
+            deplacer_bomber(grille, dic_jeu["bomber"]["pos"][0] + mouvements[touche][0],
+                            dic_jeu["bomber"]["pos"][1] + mouvements[touche][1], dic_jeu)
+          
         if touche == "space":
             self.state = "pose"
             self.poser_bombe(self.g, grille, dic_jeu)
