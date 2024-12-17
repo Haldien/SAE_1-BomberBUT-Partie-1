@@ -117,19 +117,19 @@ def render_undestructible(g, grille:list[list[list[str]]]) -> None:
                 g.dessinerRectangle(coord_x,coord_y, dim_case[0], dim_case[1],"white")
 
 def spawn_bomber(g, dic_jeu, settings):
-    dic_jeu["bomber"]["obj"] = Bomber(g, dic_jeu["sprite"]["bomber"], settings["size"], dic_jeu["bomber"]["pos"][0], dic_jeu["bomber"]["pos"][1],(0,0))
+    dic_jeu["bomber"] = Bomber(g, bomber_sprite, settings["size"], dic_jeu["bomber"]["pos"][0], dic_jeu["bomber"]["pos"][1],(0,0),3, 0 )
 
 def spawn_fantome(g, dic_jeu, settings):
     for i in dic_jeu["fantomes"]:
         if dic_jeu["fantomes"][i]["obj"] == "objetGraphique":
-            dic_jeu["fantomes"][i]["obj"] = Fantome(g, dic_jeu["sprite"]["fantomes"], settings["size"], dic_jeu["fantomes"][i]["pos"][0], dic_jeu["fantomes"][i]["pos"][1],(0,0))
+            dic_jeu["fantomes"][i]["obj"] = Fantome(g, fantome_sprite, settings["size"], dic_jeu["fantomes"][i]["pos"][0], dic_jeu["fantomes"][i]["pos"][1],(0,0))
 
 def dep_fantome(dic_jeu):
     for i in dic_jeu["fantomes"]:
-        dic_jeu["fantomes"][i]["obj"].deplacer(dic_jeu["fantomes"][i]["pos"], dic_jeu["fantomes"][i]["direction"])
+        dic_jeu["fantomes"][i].deplacer((dic_jeu["fantomes"][i].y, dic_jeu["fantomes"][i].x), dic_jeu["fantomes"][i].state)
 
-def dep_bomber(dic_jeu):
-    dic_jeu["bomber"]["obj"].deplacer(dic_jeu["bomber"]["pos"], dic_jeu["bomber"]["direction"])
+def dep_bomber(bomber:Bomber):
+    bomber.deplacer((bomber.y, bomber.x), bomber.state)
 
 
 
