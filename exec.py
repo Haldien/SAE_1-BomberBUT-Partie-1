@@ -34,18 +34,7 @@ grille = [
 """
 dic_jeu = {
 
-    "bomber": {
-        'pos': (0,0),
-        'PV' : 3,
-        'Niv': 0,
-        'Score': 0,
-        'cooldown' : 0,
-        'obj': None,
-        'direction': 'bas',
-        'index_sprite': 0,
-       
-
-    },
+    "bomber": {},
 
     "bombes" : {
 
@@ -57,30 +46,11 @@ dic_jeu = {
     },
 
     "fantomes" : {
-        # {"obj" :"objetGraphique", "pos": (tuple), "direction" : direction:str}
+
     },
 
     "mur" : {},
 
-    "sprite" : {
-        "bomber" : {
-            "bas" : ["asset/bunny/down/down1.png","asset/bunny/down/down2.png"],
-            "gauche": ["asset/bunny/left/left1.png","asset/bunny/left/left2.png"],
-            "droite": ["asset/bunny/right/right1.png", "asset/bunny/right/right2.png"],
-            "haut": ["asset/bunny/up/up1.png", "asset/bunny/up/up2.png"],
-            "pose": ["asset/bunny/pose/poseBombe.png"]
-        } ,
-        "fantomes" : {
-            "bas" : ["asset/bunny/down/down1.png","asset/bunny/down/down2.png"],
-            "gauche": ["asset/bunny/left/left1.png","asset/bunny/left/left2.png"],
-            "droite": ["asset/bunny/right/right1.png", "asset/bunny/right/right2.png"],
-            "haut": ["asset/bunny/up/up1.png", "asset/bunny/up/up2.png"],
-        }, 
-        
-        "bombes" : {
-            "bas" : ["sprites/bombe.png","sprites/bombe1.png", "sprites/bombe2.png", "sprites/bombe3s.png"] 
-        }
-    }
 
 }
 
@@ -94,6 +64,7 @@ settings = {
 """
 scenario = get_scenario("map0")
 main(scenario[2], g, scenario[0], scenario[1])
+
 """
 
 
