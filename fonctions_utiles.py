@@ -1,5 +1,7 @@
 import random
 
+
+
 # Valables pour le bomberman et les fantomes mais pas pour les bombes
 def case_valide(grille: list, y: int, x: int, dic_jeu) -> bool:
     """
@@ -87,7 +89,6 @@ def get_scenario(nomMap:str) -> tuple[dict, dict, list[list[list[str]]]]:
         },
 
         "ethernet" : {
-            "pos" : [(3,6)], "obj" : None
         },
 
         "fantomes" : {
@@ -97,6 +98,10 @@ def get_scenario(nomMap:str) -> tuple[dict, dict, list[list[list[str]]]]:
         "mur" : {
         },
 
+        "upgrade": {
+            
+        }
+
         
 
     }
@@ -105,25 +110,27 @@ def get_scenario(nomMap:str) -> tuple[dict, dict, list[list[list[str]]]]:
         "timer" : 100,
         "timerfantome": 20,
         "nombrefantome": 0,
-        "size" : None
+        "size" : None,
+        "offset" : None
     }
 
     param = get_param(nomMap)
     settings['timer'], settings['timerfantome'] = param[0], param[1]
 
     grille = create_map(nomMap)
+    print(grille)
     for y in range(len(grille)):
         for x in range(len(grille[0])):
             if "P" in grille[y][x]:
                 dic_jeu["bomber"]["pos"] = (y,x)
             elif "E" in grille[y][x]:
-                dic_jeu["ethernet"]["pos"] += [(y,x)]
+                dic_jeu["ethernet"][(y,x)] = "obj"
             elif "F" in grille[y][x]:
                 grille[y][x][0] += str(settings["nombrefantome"])
                 dic_jeu["fantomes"] = {f"F{settings["nombrefantome"]}" : ["ObjetGraphique", (y,x)]}
                 settings["nombrefantome"] += 1
 
-    
+   
     return (dic_jeu, settings, grille)
 
 
