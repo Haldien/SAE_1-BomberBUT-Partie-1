@@ -258,7 +258,7 @@ class Bomber(Mob):
             grille[self.y][self.x].append("B")
             dic_jeu["bombes"][(self.y, self.x)] = {'timer': 6, 'obj': Bombes(g, bombe_sprite ,self.size, self.y, self.x, (0,0) )}
 
-    def action_bomber(self, grille, touche: str, dic_jeu:dict):
+    def action_bomber(self, g, grille, touche: str, dic_jeu:dict):
     # Mappings des touches vers les vecteurs de mouvements correspondant
         mouvements = {
             "z": [-1, 0],
@@ -279,19 +279,25 @@ class Bomber(Mob):
         
 
         # Mouvements
-        if touche in ["z", "q", "s", "d"] and case_valide(grille, self.y + mouvements[touche][0],
-                                                        self.x + mouvements[touche][1], dic_jeu):
-            
+        if touche in ["z", "q", "s", "d"] :
 
-            self.deplacer_bomber(grille, self.y + mouvements[touche][0], self.x + mouvements[touche][1])
+          while not case_valide(grille, dic_jeu["bomber"]["pos"][0] + mouvements[touche][0],
+                                                      dic_jeu["bomber"]["pos"][1] + mouvements[touche][1], dic_jeu) and touche in ["z", "q", "s", "d"] :
 
+            touche = g.attendreTouche()
+
+            if touche in ["space", "Return"]:
+              break
+
+          if touche in ["z", "q", "s", "d"] :
+              deplacer_bomber(grille, dic_jeu["bomber"]["pos"][0] + mouvements[touche][0], dic_jeu["bomber"]["pos"][1] + mouvements[touche][1], dic_jeu)
         # Dépose un bombe
-        elif touche == "space":
+        if touche == "space":
             self.state = "pose"
             self.poser_bombe(self.g, grille, dic_jeu)
 
         # Passe son tour
-        elif touche == "Return":
+        if touche == "Return":
             pass
 
 
