@@ -19,6 +19,12 @@ avec le jeu au centre de l'écran
 
 """
 
+
+
+
+
+
+
 def action_bomber(g, grille,settings, touche: str, dic_jeu):
     # Mappings des touches vers les vecteurs de mouvements correspondant
     mouvements = {
@@ -66,7 +72,7 @@ def updater_timers(dic_jeu, settings):
     round_timer(settings)
 
 
-def explosions(grille, g, dic_jeu)->list[ObjetGraphique]:
+def explosions(grille, g, dic_jeu, offset:tuple[int, int] = (0,0))->list[ObjetGraphique]:
 
     # a_exploser : bombes dont le timer est 0
     a_exploser = [coord for coord in dic_jeu["bombes"] if dic_jeu["bombes"][coord]['timer'] == 0]
@@ -74,7 +80,7 @@ def explosions(grille, g, dic_jeu)->list[ObjetGraphique]:
     objets_graphiques_explosions = list()
 
     for coord in a_exploser:
-        objets_graphiques_explosions = exploser_bombe(grille, g, coord, dic_jeu)
+        objets_graphiques_explosions = exploser_bombe(grille, g, coord, dic_jeu, offset)
 
     return objets_graphiques_explosions
 
@@ -83,7 +89,8 @@ MAIN
 """
 def main(grille, g, dic_jeu, settings):
     settings["size"] = dimensions_de_case(grille)
-    settings["offset"] = (0,0)
+    settings["offset"] = get_offset(grille)
+    print(settings)
 
     DEFAULT_SETTING = settings.copy()
     OnGameSettings = DEFAULT_SETTING.copy()
@@ -100,16 +107,10 @@ def main(grille, g, dic_jeu, settings):
 
 
     objets_graphiques_explosions = list()
-    render_undestructible(g, grille, ["offset"])
+    render_undestructible(g, grille, settings["offset"])
     spawn_bomber(g,dic_jeu, OnGameSettings)
-    create_object(g, grille, dic_jeu)
+    create_object(g, grille, dic_jeu, OnGameSettings)
 
-    print(dic_jeu)
-
-
-
-        
-    
     while OnGameSettings["timer"] > 0 and dic_jeu["bomber"].pv > 0:
 
         touche = g.recupererTouche()
@@ -127,7 +128,6 @@ def main(grille, g, dic_jeu, settings):
                 """
                 print("bombes:", dic_jeu["bombes"])
                 print("bomber:", dic_jeu["bomber"])
-
                 print("fantome:", dic_jeu["fantomes"])
                 print("ethernet:", dic_jeu["ethernet"])
                 """
@@ -166,7 +166,7 @@ def main(grille, g, dic_jeu, settings):
     
                     OnGameSettings["timerfantome"] = DEFAULT_SETTING["timerfantome"]
 
-                objets_graphiques_explosions = explosions(grille, g, dic_jeu)
+                objets_graphiques_explosions = explosions(grille, g, dic_jeu, OnGameSettings["offset"])
                 """
 
                 dep_fantome(dic_jeu)
