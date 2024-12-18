@@ -55,10 +55,7 @@ dic_jeu = {
     "upgrade" : {
         
     }
- 
-
 }
-
 settings = {
     "timer" : 200,
     "timerfantome": 30,
@@ -67,12 +64,15 @@ settings = {
     "offset" : None
 }
 
-"""
-scenario = get_scenario("map0")
+scenario = get_scenario("map2")
 main(scenario[2], g, scenario[0], scenario[1])
+"""
+
 
 scenario = get_scenario("map1")
 main(scenario[2], g, scenario[0], scenario[1])
-"""
+#g.dessinerRectangle((TAILLE_FENETRE[0]-TAILLE_FENETRE[0]//2)//2,0, TAILLE_FENETRE[0]//2, TAILLE_FENETRE[0], "white smoke")
+
 
 main(grille, g, dic_jeu, settings)
+"""
