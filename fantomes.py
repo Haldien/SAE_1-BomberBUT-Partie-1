@@ -3,9 +3,6 @@ from fonctions_utiles import *
 from affiche import *
 
 #Format Liste Fantome, tuple les prises sont bloquantes
-
-
-
 def get_pos_possible(grille:list, pos:tuple, dic_jeu) -> list:
     """
         Cette fonction prend en paramètre :
@@ -55,36 +52,5 @@ def apparition_fantomes(g,grille:list, dic_jeu:dict, settings:dict) -> None:
     shuffle(case_disponible)
     new_entity = f"F{settings["nombrefantome"]}"
     settings["nombrefantome"] += 1
-    entite[new_entity] = Fantome(g, fantome_sprite, settings["size"], case_disponible[0][0], case_disponible[0][1], (0,0))
+    entite[new_entity] = Fantome(g, fantome_sprite, settings["size"], case_disponible[0][0], case_disponible[0][1], settings["offset"])
     grille[case_disponible[0][0]][case_disponible[0][1]] += [new_entity]
-    
-def get_Ethernet(grille:list) -> list :
-    """
-    Cette fonction prend en paramètre une grille et retourne tout les spaw.. les prises ethernet du niveau
-    Renvoie une liste contenant des couples de coordonnées.
-    """
-    prise = []
-    for i in range(len(grille)):
-        for j in range(len(grille[0])):
-            for el in grille[i][j]:
-                if el == "E":
-                    prise += [(i,j)]
-    return prise
-
-
-
-def est_proche(x_fant:int,y_fant:int, x_bomb:int, y_bomb:int) -> bool:
-    """
-        Cette fonction prend en paramètre 
-        les coordonnées du bomber et les coordonnées d'un fantôme
-
-        renvoie un booléen
-    """
-
-    if (x_fant + 1 == x_bomb and y_fant == y_bomb ) \
-        or (x_fant == x_bomb and y_fant - 1 == y_bomb ) \
-            or (x_fant == x_bomb and y_fant + 1 == y_bomb ) \
-                or (x_fant - 1 == x_bomb and y_fant == y_bomb ):
-
-        return True
-    return False
