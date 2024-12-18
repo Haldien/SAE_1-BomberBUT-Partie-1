@@ -15,11 +15,11 @@ class Entity:
         self.x, self.y =  x ,y
         self.sprite = sprite
         self.size = size
-        self.offset = size
+        self.offset = offset
         self.g = g
         self.state = "bas"
         self.indexState = 0
-        self.obj = self.g.afficherImage(self.x*self.size[0], self.y*self.size[0], self.size , sprite["bas"][self.indexState] )
+        self.obj = self.g.afficherImage(self.offset[0] + self.x * self.size[0], self.offset[1] + self.y*self.size[1], self.size , sprite["bas"][self.indexState] )
 
     def ChangeSprite(self,direct: str):
         self.Model_Choice(direct)
@@ -31,7 +31,7 @@ class Entity:
         if self.indexState >= len(self.sprite[state]):
             self.indexState = 0
 
-        self.obj = self.g.afficherImage(self.x*self.size[0], self.y*self.size[0], self.size, self.sprite[state][self.indexState])
+        self.obj = self.g.afficherImage(self.offset[0] + self.x * self.size[0], self.offset[1] + self.y*self.size[1], self.size, self.sprite[state][self.indexState])
     
     def supprimerEntite(self):
         self.g.supprimer(self.obj)
@@ -205,16 +205,16 @@ class Bombes(Entity):
         
         if timer < 2:
             self.indexState = 3
-            self.obj = self.g.afficherImage(self.x*self.size[0], self.y*self.size[0], self.size,self.sprite[self.state][self.indexState])
+            self.obj = self.g.afficherImage(self.offset[0] + self.x * self.size[0], self.offset[1] + self.y*self.size[1], self.size,self.sprite[self.state][self.indexState])
         elif timer < 3:
             self.indexState = 2
-            self.obj = self.g.afficherImage(self.x*self.size[0], self.y*self.size[0], self.size,self.sprite[self.state][self.indexState])
+            self.obj = self.g.afficherImage(self.offset[0] + self.x * self.size[0], self.offset[1] + self.y*self.size[1], self.size,self.sprite[self.state][self.indexState])
         elif timer < 4:
             self.indexState = 1
-            self.obj = self.g.afficherImage(self.x*self.size[0], self.y*self.size[0], self.size,self.sprite[self.state][self.indexState])
+            self.obj = self.g.afficherImage(self.offset[0] + self.x * self.size[0], self.offset[1] + self.y*self.size[1], self.size,self.sprite[self.state][self.indexState])
         else:
             self.indexState = 0
-            self.obj = self.g.afficherImage(self.x*self.size[0], self.y*self.size[0], self.size,self.sprite[self.state][self.indexState])
+            self.obj = self.g.afficherImage(self.offset[0] + self.x * self.size[0], self.offset[1] + self.y*self.size[1], self.size,self.sprite[self.state][self.indexState])
 
 
 class Mur(Entity):
@@ -263,7 +263,7 @@ class Bomber(Mob):
 
         if "B" not in grille[self.y][self.x]:
             grille[self.y][self.x].append("B")
-            dic_jeu["bombes"][(self.y, self.x)] = {'timer': 6, 'obj': Bombes(g, bombe_sprite ,self.size, self.y, self.x, (0,0) )}
+            dic_jeu["bombes"][(self.y, self.x)] = {'timer': 6, 'obj': Bombes(g, bombe_sprite ,self.size, self.y, self.x, self.offset )}
 
     def action_bomber(self, g, grille, touche: str, dic_jeu:dict):
     # Mappings des touches vers les vecteurs de mouvements correspondant
@@ -283,13 +283,11 @@ class Bomber(Mob):
                 self.state = "bas"
             case "d":
                 self.state = "droite"
-        
 
         # Mouvements
         if touche in ["z", "q", "s", "d"] :
 
-          if not case_valide(grille, self.y + mouvements[touche][0],
-                                                      self.x + mouvements[touche][1], dic_jeu):
+          if not case_valide(grille, self.y + mouvements[touche][0], self.x + mouvements[touche][1], dic_jeu):
             while True :
 
                 touche = g.attendreTouche()
