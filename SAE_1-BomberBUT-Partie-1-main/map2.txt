@@ -1,0 +1,10 @@
+timer 200
+timerfantome 25
+
+CCCCCCCCC
+C  P    C
+CMCMCMCMC
+C     E C
+CMCMCMCMC
+CU MMM UC
+CCCCCCCCC
