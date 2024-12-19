@@ -1,6 +1,5 @@
-import random
-
-
+import random, tkiteasy
+from constante import HEIGHT, WIDTH
 
 # Valables pour le bomberman et les fantomes mais pas pour les bombes
 def case_valide(grille: list, y: int, x: int, dic_jeu) -> bool:
@@ -75,35 +74,28 @@ def get_param( nomMap:str) -> tuple[int,int]:
 
     
 
-def get_scenario(nomMap:str) -> tuple[dict, dict, list[list[list[str]]]]:
+def get_scenario(nomMap:str) -> tuple[dict, dict, list[list[list[str]]], int]:
     """
+    Cette fonction prend en paramètre un nom de map
+
     Cette fonction permet de générer le dic_jeu qui répertorie tout les objets particulier ainsi que les paramètres du jeu
-    bomber, bombes, ethernet et fantôme.
+    bomber, bombes, ethernet et fantôme. Elle sert notamment à l'initialisation d'une map
+
+    Elle renvoie un tuple de 3 éléments
+        le dic_jeu, qui va contenir tout les objets
+    
+        settings, qui va contenir les paramètres du scénarios
+
+        graphique, qui nous permet de savoir si on veut lancer graphiquement ou non notre jeu (Il est plutôt conseiller de se servir du 
+        mode non graphique sur des petites grilles)
     """
     dic_jeu = {
-        "bomber": { 
-            
-        },
-
-        "bombes" : {
-        },
-
-        "ethernet" : {
-        },
-
-        "fantomes" : {
-            # {"obj" :"objetGraphique", "pos": (tuple), "direction" : direction:str}
-        },
-
-        "mur" : {
-        },
-
-        "upgrade": {
-            
-        }
-
-        
-
+        "bomber": { },
+        "bombes" : { },
+        "ethernet" : { },
+        "fantomes" : { },
+        "mur" : { },
+        "upgrade": { }
     }
 
     settings = {
@@ -118,7 +110,9 @@ def get_scenario(nomMap:str) -> tuple[dict, dict, list[list[list[str]]]]:
     settings['timer'], settings['timerfantome'] = param[0], param[1]
 
     grille = create_map(nomMap)
-    print(grille)
+    settings["size"] = dimensions_de_case(grille)
+    settings["offset"] = get_offset(grille)
+
     for y in range(len(grille)):
         for x in range(len(grille[0])):
             if "P" in grille[y][x]:
@@ -130,8 +124,8 @@ def get_scenario(nomMap:str) -> tuple[dict, dict, list[list[list[str]]]]:
                 dic_jeu["fantomes"] = {f"F{settings["nombrefantome"]}" : ["ObjetGraphique", (y,x)]}
                 settings["nombrefantome"] += 1
 
-   
-    return (dic_jeu, settings, grille)
+    graphique = int(input("Voulez vous que ce soit graphique ?\n1: Oui\t\t2: Non\n\n"))
+    return (dic_jeu, settings, grille, graphique)
 
 
 def generer_element():
@@ -204,3 +198,47 @@ def generer_grille(hauteur, largeur):
     return grille
 
 
+def updater_timers_bombes(dic_jeu:dict) -> None:
+    """
+    Cette fonction prends en arguments un dictionnaire.
+    Cette fonction permet de gérer le timer des bombes
+    Elle ne renvoie rienS
+    """
+    for key in dic_jeu["bombes"].keys():
+        dic_jeu["bombes"][key]["timer"] -= 1
+        dic_jeu["bombes"][key]["obj"].ignite(dic_jeu["bombes"][key]["timer"])
+        
+def round_timer(gameSetting:dict, dic_jeu) -> None:
+    """
+        Cette fonction prend en paramètre un dictionnaire qui répertorie 
+        les détails du "scénario" du niveau.
+
+        Cette fonction doit être appelé à chaque boucle pour actualiser le tour.
+    """
+    dic_jeu["bomber"].cooldown -= 1
+    gameSetting['timer'] -= 1
+    gameSetting['timerfantome'] -= 1
+
+def updater_timers(dic_jeu, settings):
+    updater_timers_bombes(dic_jeu)
+    round_timer(settings, dic_jeu)
+
+def cree_fenetre(graphique):
+    match graphique:
+        case 1:
+            fenetre = tkiteasy.ouvrirFenetre(WIDTH, HEIGHT)  # taille à changer
+        case 2:
+            fenetre = tkiteasy.ouvrirFenetre(100,100)  # taille à changer
+    return fenetre
+
+def dimensions_de_case(grille:list[list[list[str]]])-> tuple[int, int]:
+    """
+    un redimensionnement pour une taille plus petite
+    
+    """
+    # dimmensions de case retournées : tuple de la forme (x, y) !!
+    return (HEIGHT // len(grille), HEIGHT // len(grille)) if HEIGHT//len(grille) < 100 else (96,96)
+
+def get_offset(grille) -> tuple[int,int]:
+    dim_case = dimensions_de_case(grille)
+    return ((300+ (WIDTH- ( (len(grille[0])) )*dim_case[0]) )//2, (HEIGHT - ((len(grille)))*dim_case[1])//2 )
