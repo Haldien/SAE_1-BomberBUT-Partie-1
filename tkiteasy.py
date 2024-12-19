@@ -224,6 +224,9 @@ class Canevas(tk.Canvas):
         y: float,
         couleur: _Color = "white",
         taille: int = 18,
+        newWeight : str ="normal",
+        newFont : str = "Consolas",
+        ancre: Literal["n", "s", "w", "e", "nw", "sw", "ne", "se", "center"] = "center",
     ) -> ObjetGraphique:
         """Affiche un texte sur le canevas
 
@@ -237,9 +240,9 @@ class Canevas(tk.Canvas):
         Returns:
             ObjetGraphique: Retourne un objet graphique représentant ce texte sur le canevas
         """
-        font = Font(family="Helvetica", size=taille, weight="normal")
+        font = Font(family=newFont, size=taille, weight=newWeight)
         return ObjetGraphique(
-            self.create_text(x, y, fill=couleur, text=texte, font=font), x, y, couleur
+            self.create_text(x, y, fill=couleur, text=texte, font=font, anchor=ancre), x, y, couleur
         )
 
     def dessinerRectangle(
