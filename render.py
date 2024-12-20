@@ -24,7 +24,6 @@ def render_explosions_suppression(g, objets_graphiques_explosions):
 
         g.supprimer(obj)
 
-
 def render_timers_et_score(g, dic_jeu, game_settings):
 
     if dic_jeu["objets_graphiques_overlay"]:
@@ -33,16 +32,17 @@ def render_timers_et_score(g, dic_jeu, game_settings):
 
     dic_jeu["objets_graphiques_overlay"].append(
         g.afficherTexte(f"PV: {dic_jeu['bomber'].pv}", 3 * dic_jeu["fenetre_dimensions"][0] // 4,
-                        1.5 * dic_jeu["fenetre_dimensions"][1] // 5, taille=15, ancre="w"))
+                        1.5 * dic_jeu["fenetre_dimensions"][1] // 5, taille=dic_jeu["fenetre_dimensions"][1]//45, ancre="w"))
     dic_jeu["objets_graphiques_overlay"].append(
         g.afficherTexte(f"Niveau: {dic_jeu['bomber'].niv}", 3*dic_jeu["fenetre_dimensions"][0]//4,
-                        2 * dic_jeu["fenetre_dimensions"][1] // 5, taille = 15, ancre = "w"))
+                        2 * dic_jeu["fenetre_dimensions"][1] // 5, taille =dic_jeu["fenetre_dimensions"][1]//45, ancre = "w"))
     dic_jeu["objets_graphiques_overlay"].append(
         g.afficherTexte(f"Score: {dic_jeu['bomber'].score}", 3 * dic_jeu["fenetre_dimensions"][0] // 4,
-                        2.5 * dic_jeu["fenetre_dimensions"][1] // 5, taille=15, ancre="w"))
+                        2.5 * dic_jeu["fenetre_dimensions"][1] // 5, taille=dic_jeu["fenetre_dimensions"][1]//45, ancre="w"))
     dic_jeu["objets_graphiques_overlay"].append(
         g.afficherTexte(f"Timer global: {game_settings["timer"]}", 3*dic_jeu["fenetre_dimensions"][0]//4,
-                        3 * dic_jeu["fenetre_dimensions"][1] // 5, taille = 15, ancre = "w"))
+                        3 * dic_jeu["fenetre_dimensions"][1] // 5, taille =dic_jeu["fenetre_dimensions"][1]//45, ancre = "w"))
     dic_jeu["objets_graphiques_overlay"].append(
         g.afficherTexte(f"Timer fantome: {game_settings["timer_fantome"]}", 3*dic_jeu["fenetre_dimensions"][0]//4,
-                        3.5 * dic_jeu["fenetre_dimensions"][1] // 5, taille = 15, ancre = "w"))
+                        3.5 * dic_jeu["fenetre_dimensions"][1] // 5, taille =dic_jeu["fenetre_dimensions"][1]//45, ancre = "w"))
+
