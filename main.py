@@ -88,7 +88,8 @@ def updater_timers(dic_jeu, game_settings, default_game_settings):
 """
 MAIN
 """
-def main(g, grille, dic_jeu, default_game_settings):
+def main(g):
+    zone_affichage_largeur = fenetre_dimensions[0]//4
 
     # game_settings : live game settings
     game_settings = default_game_settings.copy()
