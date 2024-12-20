@@ -7,7 +7,7 @@ from fonctions_utiles import *
 from generation_grille import *
 
 from timers import *
-
+from constante import *
 
 
 
@@ -89,7 +89,50 @@ def updater_timers(dic_jeu, game_settings, default_game_settings):
 MAIN
 """
 def main(g):
+
+    
     zone_affichage_largeur = fenetre_dimensions[0]//4
+    
+    dic_jeu = {
+
+    "murs": [],
+
+    "colonnes": [],
+
+    "ethernets": [],
+
+    "bomber": None,
+
+    "fantomes": [],
+
+    "upgrades": [],
+
+    "bombes": [],
+
+
+
+    "case_dimensions": ((fenetre_dimensions[0]-zone_affichage_largeur)//grille_dimensions[1], fenetre_dimensions[1]//grille_dimensions[0]) if fenetre_dimensions[1]//grille_dimensions[0] < 100 else (96, 96),
+
+    "fenetre_dimensions": fenetre_dimensions,
+
+    "objets_graphiques_overlay": []
+    }
+
+    grille = generer_grille_et_dic_jeu(grille_dimensions[0], grille_dimensions[1], g, dic_jeu)
+
+    default_game_settings = {
+        "timer": 10,
+        "timer_fantome": 20,
+        "nombre_fantomes": 0
+    }
+
+
+
+
+
+
+
+
 
     # game_settings : live game settings
     game_settings = default_game_settings.copy()
@@ -133,5 +176,17 @@ def main(g):
                 affichage_dic_jeu(dic_jeu)
                 # affichage_game_settings(game_settings)
 
+    key_a_suppr = ["murs", "colonnes","ethernets","bomber","fantomes", "upgrades", "bombes", "objets_graphiques_overlay"]
+    
+    for key in key_a_suppr:
+        if key == "bomber":
+            dic_jeu["bomber"].se_supprimer()
+        
+        elif key == "objets_graphiques_overlay":
+            while len(dic_jeu[key]) > 0:
+                g.supprimer(dic_jeu[key][0])
+                dic_jeu[key].pop(0)
+        elif key in ["murs", "colonnes", "ethernets", "fantomes", "upgrades", "bombes"]:
+            while len(dic_jeu[key]) > 0:
+                dic_jeu[key][0].se_supprimer()
 
-    render_supprimer_jeu(g, dic_jeu)
