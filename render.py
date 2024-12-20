@@ -46,3 +46,22 @@ def render_timers_et_score(g, dic_jeu, game_settings):
         g.afficherTexte(f"Timer fantome: {game_settings["timer_fantome"]}", 3*dic_jeu["fenetre_dimensions"][0]//4,
                         3.5 * dic_jeu["fenetre_dimensions"][1] // 5, taille =dic_jeu["fenetre_dimensions"][1]//45, ancre = "w"))
 
+def render_supprimer_jeu(g, dic_jeu):
+
+    keys_a_suppr = ["murs", "colonnes", "ethernets", "fantomes", "upgrades", "bombes", "bomber",
+                    "objets_graphiques_overlay"]
+
+    for key in keys_a_suppr:
+        if key == "bomber":
+            dic_jeu[key].se_supprimer()
+
+        elif key == "objets_graphiques_overlay":
+            while len(dic_jeu[key]) > 0:
+                g.supprimer(dic_jeu[key][0])
+                dic_jeu[key].pop(0)
+
+        elif key in ["murs", "colonnes", "ethernets", "fantomes", "upgrades", "bombes"]:
+            while len(dic_jeu[key]) > 0:
+                dic_jeu[key][0].se_supprimer()
+
+
