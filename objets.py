@@ -303,6 +303,14 @@ class Bomber(Personnage):
         if "B" not in self.grille[coords[0]][coords[1]]:
             self.dic_jeu["bombes"].append(Bombe(self.g, self.grille, self.dic_jeu, coords, "B"))
 
+        # Partie graphiqe
+        self.g.supprimer(self.objet_graphique)
+
+        self.objet_graphique = self.g.afficherImage(self.pos[1] * self.dic_jeu["case_dimensions"][0],
+                                                    self.pos[0] * self.dic_jeu["case_dimensions"][1],
+                                                    self.dic_jeu["case_dimensions"],
+                                                    self.sprites["pose"][0])
+
     # On délègue la gestion des attaques des fantômes au bomberman par souci d'optimisation
     def se_faire_attaquer(self):
 
