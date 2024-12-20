@@ -48,7 +48,7 @@ class Button:
              return True
         return False
     
-    def removeButton(self):
+    def supprimer_bouton(self):
         self.g.supprimer(self.text_box)
         self.g.supprimer(self.area)
         del self
@@ -67,26 +67,34 @@ def create_text_menu(g:Canevas):
 
 g = ouvrirFenetre(fenetre_dimensions[0], fenetre_dimensions[1])
 
+def menu(g):
+    touche = None
+    element = create_text_menu(g)
 
-touche = None
-element = create_text_menu(g)
+    while touche != 'space':
+        touche = g.recupererTouche()
+        clic = g.recupererClic()
+        for i in element:
+                if type(i) is Button:
+                    i.isHover()
 
-while touche != 'space':
-    touche = g.recupererTouche()
-    clic = g.recupererClic()
-    for i in element:
-            if type(i) is Button:
-                i.isHover()
 
-    if element[2].onClick(clic):
-        pass
-    elif element[3].onClick(clic):
-        pass
-    elif element[4].onClick(clic):
-        pass
+        if element[2].onClick(clic):
+            for i in element:
+                if type(i) == Button:
+                    i.supprimer_bouton()
+                else:
+                    g.supprimer(i)
+            main(g)
+            element=create_text_menu(g)
+            
+        elif element[3].onClick(clic):
+            pass
+        elif element[4].onClick(clic):
+            pass
 
-    elif element[5].onClick(clic):
-        quit()
+        elif element[5].onClick(clic):
+            quit()
 
-    g.update()
-g.fermerFenetre()
+        g.update()
+    g.fermerFenetre()
