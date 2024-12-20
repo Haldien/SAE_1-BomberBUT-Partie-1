@@ -98,3 +98,5 @@ def menu(g):
 
         g.update()
     g.fermerFenetre()
+
+menu(g)
