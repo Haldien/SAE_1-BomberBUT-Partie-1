@@ -133,3 +133,4 @@ def main(g, grille, dic_jeu, default_game_settings):
                 # affichage_game_settings(game_settings)
 
 
+    render_supprimer_jeu(g, dic_jeu)
