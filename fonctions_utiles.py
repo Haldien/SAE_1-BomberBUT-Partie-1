@@ -26,7 +26,7 @@ def case_valide(grille: list, y: int, x: int) -> bool:
 
 def get_cases_voisines_valides(grille:list, coords:tuple) -> list:
     """
-        Cette fonction prend en paramètres une grille et un tuple de cordonnée
+        Cette fonction prend en paramètres une grille et un tuple de cordonnée (y,x)
         Elle vérifie chaque case autour d'une coordonées si elle est valide ou non
         ELle renvoie une liste de case valide
     """
@@ -139,3 +139,20 @@ def updater_timer_ethernet(dic_jeu:dict) -> None:
     """
     for ethernet in dic_jeu["ethernets"]:
         ethernet.has_spawned()
+
+def get_vanilla() -> str:
+    """
+        Cette fonction permet de récupérer le paramètre si on souhaite ou non jouez dans une version classique
+    """
+    ress = open("parametre.txt", "r", encoding="utf-8")
+    data = ress.readlines()[0].split(" ")[1]
+    ress.close()
+    return data
+
+def set_vanilla(option: int) -> None:
+    """
+        Cette fonction permet de modifier la valeur du paramètre vanilla
+    """
+    ress = open("parametre.txt", "w+", encoding="utf-8")
+    ress.write("Vanilla "+str(option))
+    ress.close()
