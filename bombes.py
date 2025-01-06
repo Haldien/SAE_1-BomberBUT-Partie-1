@@ -1,12 +1,21 @@
-
-def case_valide_pour_explosion(grille, y, x) -> bool:
+def case_valide_pour_explosion(grille:list, y:int, x:int) -> bool:
+    """
+        Cette fonction prend en paramètre une grille de jeu, et des coordonnées
+        Elle permet de vérifier si une case est valide pour une explosion
+        Elle renvoie une valeur booléenne
+    """
     # Les cases non valides sont celles en dehors de la grille et les colonnes. Les prises ethernet sont considérées comme valides pour une explosion
     if not (0 <= y <= len(grille) - 1 and 0 <= x <= len(grille[0]) - 1) or "C" in grille[y][x]:
         return False
     return True
 
 
-def cases_relatives_vers_absolues(coord, dic_cases_affectees_relatives):
+def cases_relatives_vers_absolues(coord:tuple, dic_cases_affectees_relatives:dict) -> dict:
+    """
+        Cette fonction prend en paramètre des coordonnées, un dictionnaire de case affecté relative à une bombe
+        Elle permet de faire la conversion de cases relatives en cases absolues
+        Elle renvoie un dictionnaire de coordonnées
+    """
     dic_cases_affectees_absolues = {
         "haut": [],
         "droite": [],
@@ -21,7 +30,11 @@ def cases_relatives_vers_absolues(coord, dic_cases_affectees_relatives):
 
     return dic_cases_affectees_absolues
 
-def calculer_case_affectees(grille, coord, dic_jeu):
+def calculer_case_affectees(grille:list, coord:tuple, dic_jeu:dict) -> dict:
+    """
+        Cette fonction prend en paramètre une grille de jeu, des coordonnées et un dictionnaire de jeu
+        Elle permet de calculer l'explosion d'une bombe et elle renvoie un dictionnaire de valeur
+    """
     # "La portée de ses bombes, égale à 1 + Niv / 2" = +1 case de portée tous les 2 niveaux, à part au niveau 2 où il gagne directement 1 case de portée
     portee = int(1 + dic_jeu["bomber"].niv // 2)
 
@@ -69,8 +82,3 @@ def calculer_case_affectees(grille, coord, dic_jeu):
             directions_valides.remove(direction)
 
     return cases_relatives_vers_absolues(coord, dic_cases_affectees_relatives)
-
-
-
-
-
