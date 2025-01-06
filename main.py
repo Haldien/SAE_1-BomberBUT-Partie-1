@@ -115,7 +115,7 @@ def updater_timers(dic_jeu:dict, game_settings:dict, default_game_settings:dict)
 
 ===============================================================================================
 """
-def main(g:Canevas, carte: str= "", row:int = 5, column:int = 5, mode:dict = {"endless": 0 }) -> tuple:
+def main(g:Canevas, carte: str= "", row:int = 5, column:int = 5, mode_jeu:dict = {"endless": 0 }) -> tuple:
     """
         Cette fonction prend en paramètre une fenêtre graphique, un nom de map par défaut,et une taille de map par défaut
         Elle prend en charge l'éxécution du jeu
@@ -162,8 +162,8 @@ def main(g:Canevas, carte: str= "", row:int = 5, column:int = 5, mode:dict = {"e
         
 
     objets_graphiques_explosions = None  # Pour la 1ère itération
-    if mode["endless"] != 0:
-        dic_jeu["bomber"].set_attr(mode["score"], mode["niv"], mode["pv"])
+    if mode_jeu["endless"] != 0:
+        dic_jeu["bomber"].set_attr(mode_jeu["score"], mode_jeu["niv"], mode_jeu["pv"])
     render_timers_et_score(g, dic_jeu, game_settings)  # Partie graphique, pour avoir l'overlay dès le début
     while game_settings["timer"] > 0 and dic_jeu["bomber"].pv > 0:
 
