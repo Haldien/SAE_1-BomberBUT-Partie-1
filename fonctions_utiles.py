@@ -112,15 +112,7 @@ def updater_timers_bombes(dic_jeu:dict) -> None:
     for bombe in dic_jeu["bombes"]:
         bombe.decrementer_son_timer()
 
-def updater_timers_upgrades(dic_jeu:dict) -> None:
-    """
-        Cette fonction permet d'actualiser les timers des Upgrade à partir du dictionnaire de jeu (dic_jeu)
-        On passe par un timer d'immunite parce que la déflagration des bombes détruisaient les upgrades à leurs apparitions 
-        Elle ne renvoie rien
-    """
-    for upgrade in dic_jeu["upgrades"]:
-        upgrade.immune -=1
-    
+
 def updater_timers_game_settings(game_settings:dict, default_game_settings:dict):
     """
         Cette fonction permet d'actualiser les timers des paramètres du jeu, timer et timerfantome à partir du dictionnaire de jeu (dic_jeu)
