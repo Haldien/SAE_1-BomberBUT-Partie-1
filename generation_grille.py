@@ -1,9 +1,14 @@
 import random
 
 from objets import *
+from tkiteasy import Canevas
 
-
-def generer_element(g, grille, dic_jeu, y, x):
+def generer_element(g: Canevas, grille:list, dic_jeu:dict, y:int, x:int) -> None:
+    """
+        Cette fonction prend en paramètre une fenêtre graphique, une grille, un dictionnaire de jeu et des coordonnées x et y
+        Elle génère de manière aléatoire un élément puis l'ajoute au dictionnaire de jeu
+        Elle renvoie rien
+    """
 
     random_int = random.randint(1,100)
 
@@ -16,7 +21,13 @@ def generer_element(g, grille, dic_jeu, y, x):
     elif random_int <= 100:
         pass
 
-def generer_grille_et_dic_jeu(hauteur, largeur, g, dic_jeu):
+def generer_grille_et_dic_jeu(hauteur:int, largeur:int, g:Canevas, dic_jeu:dict) -> list:
+    """
+        Cette fonction prend en argument une hauteur, une largeur, une fenêtre graphique et un dictionnaire de jeu.
+        Elle permet de générer une grille et un dictionnaire de jeu de manière aléatoire
+        Elle renvoie une grille
+    """
+
     grille = list()
 
     # Création de la grille vide
