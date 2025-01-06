@@ -44,7 +44,7 @@ class Button:
         """
         self.g.changerCouleur(self.area, color)
     
-    def isHover(self) -> None:
+    def au_survol(self) -> None:
         """
             Cette méthode permet de changer la couleur du fond du bouton au survol
             Elle ne renvoie rien
@@ -60,7 +60,7 @@ class Button:
                 self.g.changerCouleur(self.area, "black")
                 self.state = "inactive"
 
-    def onClick(self, clic:tuple[int,int]) -> bool:
+    def est_clique(self, clic:tuple[int,int]) -> bool:
         """
             Cette méthode permet d'éxécuter une action au clic d'un utilisateur
             Elle prend un tuple de coordonnée d'un clic
@@ -138,26 +138,24 @@ def menu(g:Canevas, carte: str = "") -> None:
         clic = g.recupererClic()
 
         for i in element["bouton"]:
-            element["bouton"][i].isHover()
+            element["bouton"][i].au_survol()
 
-        if element["bouton"]["play"].onClick(clic):
+        if element["bouton"]["play"].est_clique(clic):
             supprime_elem(g,element)
             
             choice_random_import(g, carte)
             element=create_text_menu(g)
             
-        elif element["bouton"]["scoreboard"].onClick(clic):
+        elif element["bouton"]["scoreboard"].est_clique(clic):
             supprime_elem(g, element)
             scoreboard(g)
             element = create_text_menu(g)
-
-
-        elif element["bouton"]["settings"].onClick(clic):
+        elif element["bouton"]["settings"].est_clique(clic):
             supprime_elem(g, element)
             parametre(g)
             element = create_text_menu(g)
 
-        elif element["bouton"]["exit"].onClick(clic):
+        elif element["bouton"]["exit"].est_clique(clic):
             quit()
 
         g.update()
@@ -193,14 +191,14 @@ def choice_random_import(g:Canevas, carte:str) -> None:
         clic = g.recupererClic()
 
         for i in element["bouton"]:
-            element["bouton"][i].isHover()
+            element["bouton"][i].au_survol()
             
         
-        if element["bouton"]["aleatoire"].onClick(clic):
+        if element["bouton"]["aleatoire"].est_clique(clic):
             supprime_elem(g, element)
             choice_size(g)
             return
-        elif element["bouton"]["importe"].onClick(clic):
+        elif element["bouton"]["importe"].est_clique(clic):
             supprime_elem(g, element)
             data = main(g, carte)
             nouveau_score(g, data[0], data[1], data[2], data[3])
@@ -244,30 +242,30 @@ def choice_size(g:Canevas):
         clic = g.recupererClic()
 
         for i in element["bouton"]:
-            element["bouton"][i].isHover()
+            element["bouton"][i].au_survol()
         
-        if element["bouton"]["moins_ligne"].onClick(clic):
+        if element["bouton"]["moins_ligne"].est_clique(clic):
             g.supprimer(text_row)
             if row-1 > 4:
                 row -= 1
             text_row = g.afficherTexte(str(row), fenetre_dimensions[0]//2, fenetre_dimensions[0]//3, taille=25,newWeight="bold")
-        elif element["bouton"]["plus_ligne"].onClick(clic):
+        elif element["bouton"]["plus_ligne"].est_clique(clic):
             g.supprimer(text_row)
             if row +1 < 100:
                 row += 1
             text_row = g.afficherTexte(str(row), fenetre_dimensions[0]//2, fenetre_dimensions[0]//3, taille=25,newWeight="bold")
-        elif element["bouton"]["moins_colonne"].onClick(clic):
+        elif element["bouton"]["moins_colonne"].est_clique(clic):
             g.supprimer(text_column)
             if column-1 > 4:
                 column -= 1
             text_column = g.afficherTexte(str(column), fenetre_dimensions[0]//2, fenetre_dimensions[0]*2//3-200, taille=25,newWeight="bold")
-        elif element["bouton"]["plus_colonne"].onClick(clic):
+        elif element["bouton"]["plus_colonne"].est_clique(clic):
             g.supprimer(text_column)
             if column+1 < 100:
                 column += 1
             text_column = g.afficherTexte(str(column), fenetre_dimensions[0]//2, fenetre_dimensions[0]*2//3-200, taille=25,newWeight="bold")
         
-        elif element["bouton"]["valide"].onClick(clic):
+        elif element["bouton"]["valide"].est_clique(clic):
             supprime_elem(g, element)
             g.supprimer(text_row)
             g.supprimer(text_column)
@@ -277,7 +275,7 @@ def choice_size(g:Canevas):
             nouveau_score(g, data[0], data[1], data[2], data[3])
             return
 
-        elif element["bouton"]["sans_fin"].onClick(clic):
+        elif element["bouton"]["sans_fin"].est_clique(clic):
             supprime_elem(g, element)
             g.supprimer(text_row)
             g.supprimer(text_column)
@@ -328,21 +326,21 @@ def scoreboard(g:Canevas) -> None:
         clic = g.recupererClic()
 
         for i in element["bouton"]:
-            element["bouton"][i].isHover()
+            element["bouton"][i].au_survol()
         
-        if element["bouton"]["ordre"].onClick(clic):
+        if element["bouton"]["ordre"].est_clique(clic):
             while len(element["text"]) != 0:
                 g.supprimer(element["text"][0])
                 del element["text"][0]
             element["text"] = create_text_scoreBoard(g,podium_score)
 
-        elif element["bouton"]["date"].onClick(clic):
+        elif element["bouton"]["date"].est_clique(clic):
             while len(element["text"]) != 0:
                 g.supprimer(element["text"][0])
                 del element["text"][0]
             element["text"] = create_text_scoreBoard(g,podium_date)
         
-        elif element["bouton"]["retour"].onClick(clic):
+        elif element["bouton"]["retour"].est_clique(clic):
             break
         
         g.update()
@@ -372,13 +370,13 @@ def create_text_scoreBoard(g:Canevas, podium:list) -> list:
     else:
         third = g.afficherTexte(f"3 - Error404 : NOTFOUND", fenetre_dimensions[0]//8, 450, "brown", 20, "bold", ancre='w')
     if (len(podium)>3):
-        fourth = g.afficherTexte(f"4 - {podium[3]["nom"]} {podium[3]["mode"]} {podium[3]["score"]} {podium[3]["date"]}", fenetre_dimensions[0]//8, 500, "gray6", 20, "bold", ancre='w')
+        fourth = g.afficherTexte(f"4 - {podium[3]["nom"]} {podium[3]["mode"]} {podium[3]["score"]} {podium[3]["date"]}", fenetre_dimensions[0]//8, 500, "gray10", 20, "bold", ancre='w')
     else:
-        fourth = g.afficherTexte(f"4 - Error404 : NOTFOUND", fenetre_dimensions[0]//8, 500, "gray8", 20, "bold", ancre='w')
+        fourth = g.afficherTexte(f"4 - Error404 : NOTFOUND", fenetre_dimensions[0]//8, 500, "gray10", 20, "bold", ancre='w')
     if (len(podium)>4):
-        fifth = g.afficherTexte(f"5 - {podium[4]["nom"]} {podium[4]["mode"]} {podium[4]["score"]} {podium[4]["date"]}", fenetre_dimensions[0]//8, 550, "gray6", 20, "bold", ancre='w')
+        fifth = g.afficherTexte(f"5 - {podium[4]["nom"]} {podium[4]["mode"]} {podium[4]["score"]} {podium[4]["date"]}", fenetre_dimensions[0]//8, 550, "gray10", 20, "bold", ancre='w')
     else:
-        fifth = g.afficherTexte(f"5 - Error404 : NOTFOUND", fenetre_dimensions[0]//8, 550, "gray8", 20, "bold", ancre='w')
+        fifth = g.afficherTexte(f"5 - Error404 : NOTFOUND", fenetre_dimensions[0]//8, 550, "gray10", 20, "bold", ancre='w')
 
     return [command_line, title, first, second, third, fourth, fifth]
 
@@ -554,12 +552,12 @@ def parametre(g) -> None:
         clic = g.recupererClic()
         for i in element["bouton"]:
             if element["bouton"][i].name != "vanilla": 
-                element["bouton"][i].isHover()
+                element["bouton"][i].au_survol()
         
-        if element["bouton"]["supprimer"].onClick(clic):
+        if element["bouton"]["supprimer"].est_clique(clic):
             pop_up_confirmation(g)
 
-        if element["bouton"]["vanilla"].onClick(clic):
+        if element["bouton"]["vanilla"].est_clique(clic):
             van = int(get_vanilla())
             if van == 1:
                 element["bouton"]["vanilla"].change_color("red")
@@ -568,11 +566,9 @@ def parametre(g) -> None:
                 element["bouton"]["vanilla"].change_color("springGreen3")
                 set_vanilla(1)
         
-        if element["bouton"]["exit"].onClick(clic):
+        if element["bouton"]["exit"].est_clique(clic):
             supprime_elem(g, element)
             return
-
-        
     supprime_elem(g, element)
 
 def create_text_param(g:Canevas) -> dict:
@@ -614,17 +610,16 @@ def pop_up_confirmation(g:Canevas) -> None:
     clic = None
     while True:
         clic = g.recupererClic()
-        touche = g.recupererTouche()
         
         for i in element["bouton"]:
-            element["bouton"][i].isHover()
+            element["bouton"][i].au_survol()
         
-        if element["bouton"]["yes"].onClick(clic):
+        if element["bouton"]["yes"].est_clique(clic):
             ress = open("scoreboard.txt", "w+", encoding="utf-8")
             ress.close()
             supprime_elem(g, element)
             return
         
-        elif element["bouton"]["no"].onClick(clic):
+        elif element["bouton"]["no"].est_clique(clic):
             supprime_elem(g, element)
             return
