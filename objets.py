@@ -424,7 +424,7 @@ class Bomber(Personnage):
         if option == 0  :
             self.niv += 1
         else:
-            if self.niv < 5:
+            if self.niv < 4:
                 self.niv += 1
 
 
