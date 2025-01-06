@@ -98,8 +98,6 @@ class Colonne(Entite):
 
         # Partie graphique
         #Purement esthétique
-        print(len(grille[0]))
-        print(grille)
         if self.pos[0] == 0 and self.pos[1] == 0:
             self.sprite = "asset/mur/coin_g_h.png"   
         elif self.pos[0] == 0 and self.pos[1] == len(grille[0])-1:
