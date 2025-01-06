@@ -2,6 +2,7 @@ from main import *
 from tkiteasy import *
 from datetime import datetime
 
+
 """
 ===============================================================================================
 
@@ -19,6 +20,7 @@ class Button:
         self.area = None
         self.text_box = None
         self.state = "inactive"
+        self.name = ""
 
         self.dessinerBouton()
     
@@ -35,7 +37,12 @@ class Button:
             "black"
         )
         self.text_box = self.g.afficherTexte(self.text,self.x, self.y, "white",20, "normal", "Consolas", "center")
-        
+    
+    def change_color(self, color:str):
+        """
+            Permet de changer la couleur du bouton par défaut
+        """
+        self.g.changerCouleur(self.area, color)
     
     def isHover(self) -> None:
         """
@@ -81,19 +88,21 @@ class Button:
 
 ===============================================================================================
 """
-def supprime_elem(g, element:list) -> None:
+def supprime_elem(g, element:dict) -> None:
     """
         Cette fonction prend en paramètre une liste d'objets graphiques d'un menu ainsi qu'une fenêtre graphique
         Elle supprime tout les éléments de cette liste
         Elle ne renvoie rien
     """
-    while element != []:
-        if type(element[0]) == Button:
-            element[0].supprimer_bouton()
-            del element[0]
-        else:
-            g.supprimer(element[0])
-            del element[0]
+    while element["text"] != []:
+        g.supprimer(element["text"][0])
+        del element["text"][0]
+    del element["text"]
+
+    for i in element["bouton"]:
+        element["bouton"][i].supprimer_bouton()
+    del element["bouton"]
+ 
 
 def create_text_menu(g:Canevas) -> None:
         """
@@ -105,11 +114,14 @@ def create_text_menu(g:Canevas) -> None:
         second_title = g.afficherTexte("La Rénovation de Maryse Bastier",fenetre_dimensions[0]//2,220,newWeight="bold", taille=20)
         play = Button(g,fenetre_dimensions[0]//2, fenetre_dimensions[1]//2, "JOUEZ")
         scoreBoard = Button(g,fenetre_dimensions[0]//2, fenetre_dimensions[1]//2+120, "SCOREBOARD")
-        settingButton = Button(g, fenetre_dimensions[0]//2, fenetre_dimensions[1]//2+ 240, "PARAMÈTRE")
+        settingButton = Button(g, fenetre_dimensions[0]//2, fenetre_dimensions[1]//2+ 240, "PARAMÈTRES")
         exitButton = Button(g,fenetre_dimensions[0]//2, fenetre_dimensions[1]//2+360, "FERMER LE JEU")
 
-
-        return  [title, second_title, play, scoreBoard,settingButton, exitButton]
+        dic_graphique = {
+            "text" : [title, second_title],
+            "bouton": {"play" : play, "scoreboard": scoreBoard, "settings": settingButton, "exit": exitButton}
+        }
+        return dic_graphique
 
 def menu(g:Canevas, carte: str = "") -> None:
     """
@@ -124,30 +136,28 @@ def menu(g:Canevas, carte: str = "") -> None:
     while touche != "Escape":
         touche = g.recupererTouche()
         clic = g.recupererClic()
-        for i in element:
-                if type(i) is Button:
-                    i.isHover()
 
+        for i in element["bouton"]:
+            element["bouton"][i].isHover()
 
-        if element[2].onClick(clic):
+        if element["bouton"]["play"].onClick(clic):
             supprime_elem(g,element)
-            
             
             choice_random_import(g, carte)
             element=create_text_menu(g)
             
-        elif element[3].onClick(clic):
+        elif element["bouton"]["scoreboard"].onClick(clic):
             supprime_elem(g, element)
             scoreboard(g)
             element = create_text_menu(g)
 
 
-        elif element[4].onClick(clic):
+        elif element["bouton"]["settings"].onClick(clic):
             supprime_elem(g, element)
             parametre(g)
             element = create_text_menu(g)
 
-        elif element[5].onClick(clic):
+        elif element["bouton"]["exit"].onClick(clic):
             quit()
 
         g.update()
@@ -161,8 +171,11 @@ def create_mode(g:Canevas) -> list:
     enonce = g.afficherTexte("Quel mode de jeu ?", fenetre_dimensions[0]//2, fenetre_dimensions[1]//2-100, taille=25, newWeight="bold")
     aleatoire = Button(g, fenetre_dimensions[0]//3, fenetre_dimensions[1]//2+200, "ALEATOIRE")
     importe = Button(g, fenetre_dimensions[0]*2//3, fenetre_dimensions[1]//2+200, "IMPORT")
-
-    return [enonce, aleatoire, importe]
+    dic_graphique = {
+        "text" : [enonce],
+        "bouton": {"aleatoire" : aleatoire, "importe": importe}
+    }
+    return dic_graphique
 
 
 def choice_random_import(g:Canevas, carte:str) -> None:
@@ -179,26 +192,26 @@ def choice_random_import(g:Canevas, carte:str) -> None:
         touche = g.recupererTouche()
         clic = g.recupererClic()
 
-        for i in element:
-            if type(i) == Button:
-                i.isHover()
+        for i in element["bouton"]:
+            element["bouton"][i].isHover()
+            
         
-        if element[1].onClick(clic):
+        if element["bouton"]["aleatoire"].onClick(clic):
             supprime_elem(g, element)
             choice_size(g)
             return
-        elif element[2].onClick(clic):
+        elif element["bouton"]["importe"].onClick(clic):
             supprime_elem(g, element)
             data = main(g, carte)
-            nouveau_score(g, data[0], data[1], data[2])
+            nouveau_score(g, data[0], data[1], data[2], data[3])
             return
     supprime_elem(g,element)
 
-def create_choice_size(g:Canevas) -> list:
+def create_choice_size(g:Canevas) -> dict:
     """
         Cette fonction prend en argument une fenêtre graphique
         Elle permet d'afficher tout les boutons et textes sur la fenêtre
-        Elle renvoie une liste d'objet graphique
+        Elle renvoie un dictionnaire d'objet graphique
     """
     title = g.afficherTexte("Chosissez la taille de votre grille", fenetre_dimensions[0]//2, 200)
     row_minus_button = Button(g, fenetre_dimensions[0]//3, fenetre_dimensions[0]//3, "- Ligne")
@@ -206,9 +219,13 @@ def create_choice_size(g:Canevas) -> list:
     column_minus_button = Button(g, fenetre_dimensions[0]//3, fenetre_dimensions[0]*2//3-200, "- Colonne")
     column_plus_button = Button(g, fenetre_dimensions[0]*2//3, fenetre_dimensions[0]*2//3-200, "+ Colonne")
 
-    valide = Button(g, fenetre_dimensions[0]//2, fenetre_dimensions[1] -200, "JOUEZ !")
-
-    return [title, row_minus_button, row_plus_button, column_minus_button, column_plus_button, valide]
+    valide = Button(g, fenetre_dimensions[0]//3, fenetre_dimensions[1] -200, "PARTIE RAPIDE")
+    endless = Button(g, fenetre_dimensions[0]//3*2, fenetre_dimensions[1] -200, "SANS FIN !")
+    dic_graphique = {
+        "text" : [title],
+        "bouton": {"moins_ligne" : row_minus_button, "plus_ligne": row_plus_button, "moins_colonne": column_minus_button, "plus_colonne": column_plus_button, "valide": valide, "sans_fin": endless}
+    }
+    return dic_graphique
 
 def choice_size(g:Canevas):
     """
@@ -226,39 +243,53 @@ def choice_size(g:Canevas):
         touche = g.recupererTouche()
         clic = g.recupererClic()
 
-        for i in element:
-            if type(i) == Button:
-                i.isHover()
+        for i in element["bouton"]:
+            element["bouton"][i].isHover()
         
-        if element[1].onClick(clic):
+        if element["bouton"]["moins_ligne"].onClick(clic):
             g.supprimer(text_row)
             if row-1 > 4:
                 row -= 1
             text_row = g.afficherTexte(str(row), fenetre_dimensions[0]//2, fenetre_dimensions[0]//3, taille=25,newWeight="bold")
-        elif element[2].onClick(clic):
+        elif element["bouton"]["plus_ligne"].onClick(clic):
             g.supprimer(text_row)
             if row +1 < 100:
                 row += 1
             text_row = g.afficherTexte(str(row), fenetre_dimensions[0]//2, fenetre_dimensions[0]//3, taille=25,newWeight="bold")
-        elif element[3].onClick(clic):
+        elif element["bouton"]["moins_colonne"].onClick(clic):
             g.supprimer(text_column)
             if column-1 > 4:
                 column -= 1
             text_column = g.afficherTexte(str(column), fenetre_dimensions[0]//2, fenetre_dimensions[0]*2//3-200, taille=25,newWeight="bold")
-        elif element[4].onClick(clic):
+        elif element["bouton"]["plus_colonne"].onClick(clic):
             g.supprimer(text_column)
             if column+1 < 100:
                 column += 1
             text_column = g.afficherTexte(str(column), fenetre_dimensions[0]//2, fenetre_dimensions[0]*2//3-200, taille=25,newWeight="bold")
         
-        elif element[5].onClick(clic):
+        elif element["bouton"]["valide"].onClick(clic):
             supprime_elem(g, element)
             g.supprimer(text_row)
             g.supprimer(text_column)
             del text_row
             del text_column
             data = main(g, row = row, column= column)
-            nouveau_score(g, data[0], data[1], data[2])
+            nouveau_score(g, data[0], data[1], data[2], data[3])
+            return
+
+        elif element["bouton"]["sans_fin"].onClick(clic):
+            supprime_elem(g, element)
+            g.supprimer(text_row)
+            g.supprimer(text_column)
+            del text_row
+            del text_column
+            data = (0, 0, "RANDOM", 3)
+            endless = {"endless": 1, "score" : 0, "niv": 0, "pv": 3 }
+            while data[3] > 0:
+                data = main(g, row = row, column=column, base = endless)
+                score, niv, mode, pv = data
+                endless = {"endless": 1, "score" : score, "niv": niv, "pv": pv }
+            nouveau_score(g, score, niv, "ENDLESS_RANDOM", pv)
             return
      
     g.supprimer(text_row)
@@ -284,51 +315,46 @@ def scoreboard(g:Canevas) -> None:
     podium_score = order_by_score(dic_score) if len(dic_score) > 0 else []
     podium_date = list(dic_score.values())[::-1]
 
-    element = []
+    element = {}
     order_score_button = Button(g, fenetre_dimensions[0]//8+150, 750, "par Score")
     order_date_button = Button(g, fenetre_dimensions[0]//8+500,750, "par Date")
     back = Button(g, fenetre_dimensions[0]//8 + 800, 750, "Revenir ")
 
-    element += [order_score_button, order_date_button, back]
-    element += create_text_scoreBoard(g, podium_score) 
+    element["bouton"] = {"ordre":order_score_button, "date":order_date_button, "retour":back}
+    element["text"] = create_text_scoreBoard(g, podium_score) 
     touche = None
     while touche != "Escape":
         touche = g.recupererTouche()
         clic = g.recupererClic()
 
-        for i in element:
-                if type(i) is Button:
-                    i.isHover()
+        for i in element["bouton"]:
+            element["bouton"][i].isHover()
         
-        if element[0].onClick(clic):
-            while len(element) != 3:
-                g.supprimer(element[3])
-                del element[3]
-            element += create_text_scoreBoard(g,podium_score)
+        if element["bouton"]["ordre"].onClick(clic):
+            while len(element["text"]) != 0:
+                g.supprimer(element["text"][0])
+                del element["text"][0]
+            element["text"] = create_text_scoreBoard(g,podium_score)
 
-        elif element[1].onClick(clic):
-            while len(element) != 3:
-                g.supprimer(element[3])
-                del element[3]
-            element += create_text_scoreBoard(g,podium_date)
+        elif element["bouton"]["date"].onClick(clic):
+            while len(element["text"]) != 0:
+                g.supprimer(element["text"][0])
+                del element["text"][0]
+            element["text"] = create_text_scoreBoard(g,podium_date)
         
-        elif element[2].onClick(clic):
+        elif element["bouton"]["retour"].onClick(clic):
             break
         
         g.update()
     
-    for i in element:
-        if type(i) == Button:
-            i.supprimer_bouton()
-        else:
-            g.supprimer(i)
+    supprime_elem(g, element)
 
 
-def create_text_scoreBoard(g:Canevas, podium:list) -> None:
+def create_text_scoreBoard(g:Canevas, podium:list) -> list:
     """
         Cette fonction prend en paramètre une liste de dico trié selon soit la date d'insertion ou le score et une fenêtre graphique.
         Elle permet d'afficher le podium des 5 meilleurs ou derniers joueurs ayant joué.
-        Elle ne renvoie rien
+        Elle renvoie une liste d'objet graphique
     """
     command_line = g.afficherTexte("C:/IUT/Tableau_des_Scores.exe", fenetre_dimensions[0]//8, 200, taille=40, newWeight="bold",ancre="w")
     title = g.afficherTexte("===[ ScoreBoard ]===", fenetre_dimensions[0]//8, 300, taille=20, ancre='w')
@@ -414,7 +440,6 @@ def order_by_score(dic_score:dict) -> list:
             result[j+1] = result[j]
             j -= 1
         result[j+1] = val
-    print(result)
     return result[::-1]
     
 
@@ -465,7 +490,7 @@ def update_score(pseudo:str, score:str, niv:str, mode: str) -> None:
             insert_into_scoreboard(pseudo, mode, score,niv)
                 
 
-def nouveau_score(g: Canevas, score : int, niv : int, mode:str) -> None:
+def nouveau_score(g: Canevas, score : int, niv : int, mode:str, vie:int) -> None:
     """
         Cette fonction prend en paramètre une fenêtre graphique, un score un niveau
         Elle permet de créé un nouveau sous-menu qui permet de rentrer un nouveau joueur, l'utilisateur peut entrer du texte 
@@ -474,7 +499,11 @@ def nouveau_score(g: Canevas, score : int, niv : int, mode:str) -> None:
 
     touche = None
     pseudo = ""
-    enonce = g.afficherTexte("Entrez un nom", fenetre_dimensions[0]//2, fenetre_dimensions[1]//2-200, taille=35, newWeight="bold")
+    if int(vie) > 0:
+        fin = g.afficherTexte("Vous avez survécu", fenetre_dimensions[0]//2, 170,"gold", taille= 50, newWeight="bold")
+    else:
+        fin = g.afficherTexte("Vous êtes mort...", fenetre_dimensions[0]//2, 170,"red", taille= 50, newWeight="bold")
+    enonce = g.afficherTexte("Entrez un nom", fenetre_dimensions[0]//2, fenetre_dimensions[1]//2-150, taille=25, newWeight="bold")
     pseudo_affiche = g.afficherTexte(pseudo, fenetre_dimensions[0]//2, fenetre_dimensions[1]//2, taille=35, newWeight="bold")
 
     while touche != "Escape":
@@ -490,11 +519,14 @@ def nouveau_score(g: Canevas, score : int, niv : int, mode:str) -> None:
         elif touche == "Return" and len(pseudo) > 3:
             update_score(pseudo, score, niv, mode)
             g.supprimer(pseudo_affiche)
+            g.supprimer(fin)
+            del fin
             del pseudo_affiche
             g.supprimer(enonce)
             del enonce
             return
-  
+    g.supprimer(fin)
+    del fin
     g.supprimer(pseudo_affiche)
     del pseudo_affiche
     g.supprimer(enonce)
@@ -520,15 +552,30 @@ def parametre(g) -> None:
     while touche != "Escape":
         touche = g.recupererTouche()
         clic = g.recupererClic()
-        for i in element:
-            if type(i) == Button:
-                i.isHover()
+        for i in element["bouton"]:
+            if element["bouton"][i].name != "vanilla": 
+                element["bouton"][i].isHover()
         
-        if element[2].onClick(clic):
+        if element["bouton"]["supprimer"].onClick(clic):
             pop_up_confirmation(g)
+
+        if element["bouton"]["vanilla"].onClick(clic):
+            van = int(get_vanilla())
+            if van == 1:
+                element["bouton"]["vanilla"].change_color("red")
+                set_vanilla(0)
+            else:
+                element["bouton"]["vanilla"].change_color("springGreen3")
+                set_vanilla(1)
+        
+        if element["bouton"]["exit"].onClick(clic):
+            supprime_elem(g, element)
+            return
+
+        
     supprime_elem(g, element)
 
-def create_text_param(g:Canevas) -> list:
+def create_text_param(g:Canevas) -> dict:
     """
         Cette fonction prend en paramètre une fenêtre graphique.
         Elle permet d'afficher tout les textes et boutons du menu
@@ -537,9 +584,19 @@ def create_text_param(g:Canevas) -> list:
     title = g.afficherTexte("PARAMETRE", fenetre_dimensions[0]//8, 200, taille=35, newWeight="bold", ancre="w")
     supp_scoreboard = g.afficherTexte("Suppression des scores", fenetre_dimensions[0]*1.5//8, 300, taille=20, ancre="w")
     supp_button = Button(g, fenetre_dimensions[0]*6//8, 300, "Supprimer" )
+    exit_button = Button(g, fenetre_dimensions[0]//2, fenetre_dimensions[1]-150, "Revenir" )
+    vanilla = g.afficherTexte("Voulez jouez de manière classique ?", fenetre_dimensions[0]//8, 500, newWeight="normal", ancre="w")
+    vanilla_button = Button(g, fenetre_dimensions[0]*6//8, 500, "Vanilla")
+    vanilla_button.name = "vanilla"
+    if int(get_vanilla()) == 1:
+        vanilla_button.change_color("springGreen3")
+    else:
+        vanilla_button.change_color("red")
 
-    element = [title, supp_scoreboard, supp_button]
-    return element
+    dic_graphique = {"text" : [title, supp_scoreboard, vanilla],
+                     "bouton": {"supprimer" : supp_button, "exit": exit_button, "vanilla": vanilla_button}}
+    
+    return dic_graphique
 
 def pop_up_confirmation(g:Canevas) -> None:
     """
@@ -551,23 +608,23 @@ def pop_up_confirmation(g:Canevas) -> None:
     yes_button = Button(g, fenetre_dimensions[0]//3, fenetre_dimensions[1]-350, "Oui")
     no_button = Button(g, fenetre_dimensions[0]*2//3, fenetre_dimensions[1]-350, "Non")
     question = g.afficherTexte("Êtes-vous sûr de supprimer le tableau des scores ?", fenetre_dimensions[0]//2, fenetre_dimensions[1]//2-100)
-    element = [backWindow, yes_button, no_button, question]
-    touche = None
+    element = {"text": [backWindow, question], "bouton": {"yes": yes_button, "no": no_button}}
+
+
     clic = None
     while True:
         clic = g.recupererClic()
         touche = g.recupererTouche()
         
-        for i in element:
-            if type(i) == Button:
-                i.isHover()
+        for i in element["bouton"]:
+            element["bouton"][i].isHover()
         
-        if element[1].onClick(clic):
+        if element["bouton"]["yes"].onClick(clic):
             ress = open("scoreboard.txt", "w+", encoding="utf-8")
             ress.close()
             supprime_elem(g, element)
             return
         
-        elif element[2].onClick(clic):
+        elif element["bouton"]["no"].onClick(clic):
             supprime_elem(g, element)
             return
