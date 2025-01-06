@@ -6,8 +6,9 @@ Naviguer à travers les salles de classes, plus ou moins grandes, détruisez fan
 
 POUR LANCER LE JEU, LANCER LE PROGRAMME NOMMÉ exec.py.
 Pour ajouter une map autre que celle par défaut, modifier la valeur du deuxième argument dans l'appel de la fonction menu dans exec.py. Il faudra aussi ajouter cette map (fichier texte) dans le dossier map.
-
+```
 Touches :
 z,q,s,d -> déplacement (attention au verr.Maj)
 espace -> pose de bombe
 entrer -> attendre un tour
+```
