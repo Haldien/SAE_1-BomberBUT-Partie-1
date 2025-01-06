@@ -4,7 +4,7 @@ Vous êtes le dernier espoir de ce projet, votre CV de démolisseur-médium bien
 
 Naviguer à travers les salles de classes, plus ou moins grandes, détruisez fantômes et murs afin d’acquérir le meilleur score possible. Mais attention à ne pas succomber à vos propres bombes.
 
-__LANCER LE JEU, LANCER LE PROGRAMME NOMMÉ exec.py.__
+__POUR LANCER LE JEU, LANCER LE PROGRAMME NOMMÉ exec.py.__
 Pour ajouter une map autre que celle par défaut, modifier la valeur du deuxième argument dans l'appel de la fonction menu dans ***exec.py***. Il faudra aussi ajouter cette map (fichier texte) dans le dossier map.
 ```
 Touches :
