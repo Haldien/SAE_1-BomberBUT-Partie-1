@@ -8,6 +8,10 @@ from menu import *
 ===============================================================================================
 """
 def test_case_valide_explosion():
+    """
+        Cette fonction permet tester la fonction case_valide explosions() qui vérifie si il y'a une explosion qui peut se produire à une case données
+        On teste surtout si la propagation reste toujours dans la limite de zone et si la "colonne" une case bloquante, a le même effet
+    """
     grille1 = [ # petite grille théorique
         [[], [], ["C"]],
         [[], [], []],
@@ -28,10 +32,14 @@ def test_case_valide_explosion():
 ===============================================================================================
 """
 def test_case_valide():
+    """
+        Cette fonction permet de tester si la fonction case_valide() marche correctement, Elle vérifie si une case est nécessairement vide 
+        ou avec des éléments pouvant être multiple sur une même case
+    """
     grille2 = [ # petite grille théorique
             [[], ["E"], ["F"]],
-            [[], ["M"], ["C"]],
-            [[], ["P"], []]
+            [["B"], ["M"], ["C"]],
+            [[], ["P"], ["U"]]
         ]
     assert case_valide(grille2, 0, 0) == True # Si une case est bien vide
     assert case_valide(grille2, 4, 0) == False # Si on est en dehors de la grille
@@ -40,8 +48,16 @@ def test_case_valide():
     assert case_valide(grille2, 1, 1) == False # Si on est sur un élément existant
     assert case_valide(grille2, 1, 2) == False # Si on est sur un élément existant
     assert case_valide(grille2, 2, 1) == False # Si on est sur un élément existant
+    assert case_valide(grille2, 2, 2) == True # Si on est sur un élément "Upgrade"
+    assert case_valide(grille2, 1, 0) == True # Si on est sur un élément "Bombe"
+
+
 
 def test_case_valide_voisine():
+    """
+        Cette fonction teste si la fonction case_valide_voisine() marche correctement,
+        Elle renvoie toutes position voisine valide par rapport à une coordonnée données
+    """
     grille3 = [ # petite grille théorique
             [["A"], [], []],
             [[], ["X"], []],
@@ -57,6 +73,9 @@ def test_case_valide_voisine():
     Cela inclut gererer_element(), generer_grille_et_dic_jeu()
 """
 def test_create_map():
+    """
+        Permet de crée une map à partir d'un fichier texte, le but de create map est de vérifier si le formatague est bien respecté
+    """
     grille_temoin = [
         [["C"],["C"],["C"],["C"],["C"],["C"],["C"],["C"],["C"]],
         [["C"],[   ],["P"],[   ],[   ],[   ],[   ],[   ],["C"]],
@@ -68,6 +87,9 @@ def test_create_map():
     assert create_map("map1") == grille_temoin
 
 def test_get_param():
+    """
+        Permet de crée des paramètres à partir d'un fichier texte, on souhaite vérifier si la manière de comment on extrait les informations sont bien séparés
+    """
     assert get_param("map0") == (250, 20)
     assert get_param("map1") == (150, 30)
     assert get_param("map2") == (200, 25)
@@ -79,8 +101,14 @@ def test_get_param():
 
 ===============================================================================================
 """
+"""
+    Notre objet entite pose sa case lorsqu'il apparaît, de ce fait on utilisera une grille de test et une grille témoin pour effectuer nos test
+"""
 
 def creation_entite():
+    """
+        On teste si notre objet est bien crée
+    """
     grille4 = [ # petite grille théorique
             [[], [], []],
             [[], [], []],
@@ -100,6 +128,9 @@ def creation_entite():
 
 # Ethernet
 def test_spawn_fantome():
+    """
+        On teste si notre méthode d'apparition de fantôme à partir d'une prise ethernet fonctionne
+    """
     grille5 = [ # petite grille théorique
                 [[], [], []],
                 [[], [], []],
@@ -121,6 +152,10 @@ def test_spawn_fantome():
     assert grille5 == grille5_temoinA or grille5 == grille5_temoinB 
 
 def test_deplacement():
+    """
+        Cette fonction permet de tester si les déplacements du Bomber, et des fantomes sont bien enregistré
+        Ici, dans leurs méthodes respectives, on ne vérifie pas si elles sont nécéssairement voisine. 
+    """
     grille6 = [ # petite grille théorique
                     [[], [], []],
                     [[], [], []],
@@ -177,7 +212,7 @@ def test_attaque():
     bomber = Bomber(g, grille9, {"bombes": [],"case_dimensions":(96,96)},(1,1),"P" ) 
     fantome = Fantome(g, grille9, {"case_dimensions":(96,96)},(1,2),"F" )
     print(grille9)
-    assert bomber.pv == 3  # Par défaut
+    assert bomber.pv == 3  # Par défaut 
     bomber.se_faire_attaquer()
     assert bomber.pv == 2 # Trop proche d'un fantôme
     bomber.se_deplacer((0,0), "P", {})
