@@ -1,0 +1,83 @@
+from tkiteasy import Canevas
+def render_explosions_apparition(g: Canevas, cases_affectees: list, dic_jeu:dict ) -> list:
+    """
+        Cette fonction prend en paramètre une fenêtre graphique, une liste de cases affectés et un dictionnaire de jeu
+        Elle permet d'afficher les déflagrations des bombes qui sont entrain d'explosés
+        Elle renvoie une liste d'objet graphique
+    """
+    dimensions_case = dic_jeu["case_dimensions"]
+    coords_affectees = list()
+
+    for liste in list(cases_affectees.values()):
+        for coord in liste:
+                coords_affectees.append(coord)
+    objets_graphiques_explosions = list()
+
+    for coord in coords_affectees:
+        coord_x = coord[1] * dimensions_case[0]
+        coord_y = coord[0] * dimensions_case[1]
+        obj = g.afficherImage(coord_x, coord_y, (dimensions_case[0], dimensions_case[1]), "asset/explosion/explosion.png")
+        objets_graphiques_explosions.append(obj)
+
+    return objets_graphiques_explosions
+
+def render_explosions_suppression(g:Canevas, objets_graphiques_explosions:list) -> None:
+    """
+        Cette fonction prend en paramètre une fenêtre graphique, et une liste d'objet graphique
+        Elle permet de supprimer tout les objets graphique de cette liste
+        Elle ne renvoie rien
+    """
+    while objets_graphiques_explosions != []:
+        g.supprimer(objets_graphiques_explosions[0])
+        del objets_graphiques_explosions[0]
+
+def render_timers_et_score(g: Canevas, dic_jeu:dict, game_settings:dict) -> None:
+    """
+        Cette fonction prend en paramètre une fenêtre graphique, un dictionnaire de jeu et un dictionnaire de paramètre
+        Elle permet d'afficher tous les timers, pv, et niveau du bombers
+        Elle ne renvoie rien
+    """
+    if dic_jeu["objets_graphiques_overlay"]:
+        for objet in dic_jeu["objets_graphiques_overlay"]:
+            g.supprimer(objet)
+
+    dic_jeu["objets_graphiques_overlay"].append(
+        g.afficherTexte(f"PV: {dic_jeu['bomber'].pv}", 3 * dic_jeu["fenetre_dimensions"][0] // 4,
+                        1.5 * dic_jeu["fenetre_dimensions"][1] // 5, taille=dic_jeu["fenetre_dimensions"][1]//45, ancre="w"))
+    dic_jeu["objets_graphiques_overlay"].append(
+        g.afficherTexte(f"Niveau: {dic_jeu['bomber'].niv}", 3*dic_jeu["fenetre_dimensions"][0]//4,
+                        2 * dic_jeu["fenetre_dimensions"][1] // 5, taille =dic_jeu["fenetre_dimensions"][1]//45, ancre = "w"))
+    dic_jeu["objets_graphiques_overlay"].append(
+        g.afficherTexte(f"Score: {dic_jeu['bomber'].score}", 3 * dic_jeu["fenetre_dimensions"][0] // 4,
+                        2.5 * dic_jeu["fenetre_dimensions"][1] // 5, taille=dic_jeu["fenetre_dimensions"][1]//45, ancre="w"))
+    dic_jeu["objets_graphiques_overlay"].append(
+        g.afficherTexte(f"Timer global: {game_settings["timer"]}", 3*dic_jeu["fenetre_dimensions"][0]//4,
+                        3 * dic_jeu["fenetre_dimensions"][1] // 5, taille =dic_jeu["fenetre_dimensions"][1]//45, ancre = "w"))
+    dic_jeu["objets_graphiques_overlay"].append(
+        g.afficherTexte(f"Timer fantome: {game_settings["timer_fantome"]}", 3*dic_jeu["fenetre_dimensions"][0]//4,
+                        3.5 * dic_jeu["fenetre_dimensions"][1] // 5, taille =dic_jeu["fenetre_dimensions"][1]//45, ancre = "w"))
+
+def render_supprimer_jeu(g:Canevas, dic_jeu: dict, render_explo:list) -> None:
+    """
+        Cette fonction prend en paramètre un dictionnaire de jeu, la liste d'explosion
+        Elle permet de supprimer graphiquement et physiquement les données affichées dans la fenêtre
+        elle ne renvoie rien
+    """
+    keys_a_suppr = ["murs", "colonnes", "ethernets", "fantomes", "upgrades", "bombes", "bomber",
+                    "objets_graphiques_overlay"]
+    for key in keys_a_suppr:
+        if key == "bomber":
+            dic_jeu[key].se_supprimer()
+
+        elif key == "objets_graphiques_overlay":
+            while len(dic_jeu[key]) > 0:
+                g.supprimer(dic_jeu[key][0])
+                dic_jeu[key].pop(0)
+
+        elif key in ["murs", "colonnes", "ethernets", "fantomes", "upgrades", "bombes"]:
+            while len(dic_jeu[key]) > 0:
+                dic_jeu[key][0].se_supprimer()
+
+    while len(render_explo) > 0:
+        g.supprimer(render_explo[0])
+        render_explo.pop(0)

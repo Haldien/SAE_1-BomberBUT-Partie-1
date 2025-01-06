@@ -1,0 +1,204 @@
+from objets import *
+from time import sleep
+from fonctions_utiles import *
+from generation_grille import *
+from constante import *
+from tkiteasy import Canevas
+
+"""
+===============================================================================================
+
+                            Fonction Principale
+
+===============================================================================================
+"""
+def action_bomber(g:Canevas, grille:list, touche: str, dic_jeu:dict, settings:dict) -> None:
+    """
+        Cette fonction prend en paramètre une fenêtre graphique, une touche, un dictionnaire de jeu et un dictionnaire de paramètre
+        Elle permet d'effectuer les actions du bomber, ces déplacements, la pose de bombe ou l'action de rien faire
+        Elle ne renvoie rien
+    """
+    # Mappings des touches vers les vecteurs de mouvements correspondant
+    mouvements = {
+        "z": [-1, 0],
+        "q": [0, -1],
+        "s": [1, 0],
+        "d": [0, 1]
+    }
+
+    # Mouvements
+    if touche in ["z", "q", "s", "d"]:
+        # On ne passe pas de tout si la case n'est pas valide
+        if not case_valide(grille, dic_jeu["bomber"].pos[0] + mouvements[touche][0], dic_jeu["bomber"].pos[1] + mouvements[touche][1]):
+            while True:
+                touche = g.attendreTouche()
+                if touche in ["z", "q", "s", "d"] and case_valide(grille, dic_jeu["bomber"].pos[0] + mouvements[touche][0], dic_jeu["bomber"].pos[1] + mouvements[touche][1]):
+                    dic_jeu["bomber"].se_deplacer((dic_jeu["bomber"].pos[0] + mouvements[touche][0], dic_jeu["bomber"].pos[1] + mouvements[touche][1]), "P", settings)
+                    break
+                elif touche in ["Return", "space"]:
+                    break
+
+        else:
+            dic_jeu["bomber"].se_deplacer((dic_jeu["bomber"].pos[0] + mouvements[touche][0], dic_jeu["bomber"].pos[1] + mouvements[touche][1]),"P", settings)
+
+
+    # Dépose un bombe
+    if touche == "space":
+        dic_jeu["bomber"].poser_bombe(dic_jeu["bomber"].pos)
+
+    # Passe son tour
+    if touche == "Return":
+        pass
+
+def deplacement_fantomes(dic_jeu:dict) -> None:
+    """
+        Cette fonction prend en paramètre un dictionnaire de jeu,
+        Elle permet d'effectuer le déplacement des fantômes
+        Elle ne renvoie rien
+    """
+    for fantome in dic_jeu["fantomes"]:
+        fantome.se_deplacer_random()
+
+def attaque_fantomes(dic_jeu:dict) -> None:
+    """
+        Cette fonction prend en paramèter un dictionnaire de jeu
+        Elle permet d'effectuer l'attaque des fantômes lorsque le bomber est à proximité des fantômes
+        Elle ne renvoie rien
+    """
+    dic_jeu["bomber"].se_faire_attaquer()
+
+def apparition_fantomes(dic_jeu:dict, game_settings:dict) -> None:
+    """
+        Cette fonction prend en paramètre un dictionnaire de jeu et un dictionnaire de paramètre
+        Elle permet de faire apparaître les fantomes à côté des prises ethernet lorsque c'est possible
+        Elle ne renvoie rien
+    """
+    if game_settings["timer_fantome"] == 1:
+        random_liste_ethernets = dic_jeu["ethernets"].copy()
+        random.shuffle(random_liste_ethernets)
+
+        for prise in random_liste_ethernets:
+            if prise.spawner():  # Jusqu'à ce que un prise spawn un fantôme
+                return  # Un seul spawn de fantôme
+
+def explosions(dic_jeu:dict) -> list:
+    """
+        Cette fonction prend en paramètre un dictionnaire
+        Elle permet d'effectuer l'explosion des bombes
+        Elle renvoie une liste d'objet graphique
+    """
+    # a_exploser : bombes dont le timer est 0
+    a_exploser = [bombe for bombe in dic_jeu["bombes"] if bombe.timer == 0]
+
+    objets_graphiques_explosions = list()
+
+    for bombe in a_exploser:
+        objets_graphiques_explosions = bombe.s_exploser()
+
+    return objets_graphiques_explosions
+
+
+def updater_timers(dic_jeu:dict, game_settings:dict, default_game_settings:dict) -> None:
+    """
+        Cette fonction prend en paramètre un dictionnaire de jeu, un dictionnaire de paramètre en jeu et les paramètres de jeu par défaut
+        Cette fonction permet d'actualiser tout les timers de tout les objets et paramètres
+        Elle ne renvoie rien
+    """
+    updater_timers_bombes(dic_jeu)
+    updater_timers_game_settings(game_settings, default_game_settings)
+    updater_timers_upgrades(dic_jeu)
+    updater_timer_ethernet(dic_jeu)
+"""
+===============================================================================================
+
+                                Main
+
+===============================================================================================
+"""
+def main(g:Canevas, carte: str= "", row:int = 5, column:int = 5) -> tuple:
+    """
+        Cette fonction prend en paramètre une fenêtre graphique, un nom de map par défaut,et une taille de map par défaut
+        Elle prend en charge l'éxécution du jeu
+        Elle renvoie un tuple d'un score:int et de niveau:int
+    """
+
+    if carte == "":
+        mode = "RANDOM"
+        zone_affichage_largeur = fenetre_dimensions[0]//4
+        
+        dic_jeu = {
+        "murs": [],
+        "colonnes": [],
+        "ethernets": [],
+        "bomber": None,
+        "fantomes": [],
+        "upgrades": [],
+        "bombes": [],
+
+        "case_dimensions": ((fenetre_dimensions[0]-zone_affichage_largeur)//row, fenetre_dimensions[1]//column) if fenetre_dimensions[1]//column < 100 else (96, 96),
+
+        "fenetre_dimensions": fenetre_dimensions,
+
+        "objets_graphiques_overlay": []
+        }
+
+        grille = generer_grille_et_dic_jeu(column, row, g, dic_jeu)
+        default_game_settings = {
+            "timer": 200,
+            "timer_fantome": 20,
+            "nombre_fantomes": 0,
+        }
+
+        # game_settings : live game settings
+        game_settings = default_game_settings.copy()
+    else:
+        mode = "IMPORT"
+        scenario = get_scenario(g, carte)
+        dic_jeu = scenario[0]
+        default_game_settings = scenario[1]
+        grille = scenario[2]
+
+        game_settings = default_game_settings.copy()
+        
+
+    objets_graphiques_explosions = None  # Pour la 1ère itération
+    render_timers_et_score(g, dic_jeu, game_settings)  # Partie graphique, pour avoir l'overlay dès le début
+    while game_settings["timer"] > 0 and dic_jeu["bomber"].pv > 0:
+
+        touche = g.recupererTouche()
+
+        # Partie graphique. Doit être après "touche = g.recupererTouche()" pour que les explosions apparaissent
+        if objets_graphiques_explosions:
+            sleep(0.2)
+            render_explosions_suppression(g, objets_graphiques_explosions)
+            objets_graphiques_explosions = list()
+
+        if touche is not None:
+
+            if touche in ["z", "q", "s", "d", "space", "Return"]:
+ 
+                action_bomber(g, grille, touche, dic_jeu, game_settings)
+
+                deplacement_fantomes(dic_jeu)
+
+                attaque_fantomes(dic_jeu)
+
+                apparition_fantomes(dic_jeu, game_settings)
+
+                updater_timers(dic_jeu, game_settings, default_game_settings)
+
+                objets_graphiques_explosions = explosions(dic_jeu)
+                # Partie graphique
+
+                render_timers_et_score(g, dic_jeu, game_settings)  # Partie graphique
+
+
+                # Affichage pour tester
+                #affichage_grille(grille)
+                #affichage_dic_jeu(dic_jeu)
+                # affichage_game_settings(game_settings)
+
+    score = dic_jeu["bomber"].score
+    niv = dic_jeu["bomber"].niv
+    render_supprimer_jeu(g, dic_jeu, objets_graphiques_explosions)
+    return (score, niv, mode)

@@ -1,0 +1,1 @@
+fenetre_dimensions = (1280, 960)  # !! X, Y (1280, 960)
