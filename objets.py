@@ -218,7 +218,6 @@ class Upgrade(Entite):
 
         # Partie graphique
         self.sprite = "asset/upgrade/upgrade.png"
-        self.immune = 1
 
         self.objet_graphique = self.g.afficherImage(self.pos[1] * dic_jeu["case_dimensions"][0],
                                                     self.pos[0] * dic_jeu["case_dimensions"][1],
@@ -274,35 +273,35 @@ class Bombe(Entite):
         for direction in dic_cases_affectees.keys():
             for coord_explosion in dic_cases_affectees[direction]:
 
+
+                if "P" in self.grille[coord_explosion[0]][coord_explosion[1]]:
+                    self.dic_jeu["bomber"].pv -= 1
+
+                if "U" in self.grille[coord_explosion[0]][coord_explosion[1]]:
+                    for upgrade in self.dic_jeu["upgrades"]:
+                        if upgrade.pos == coord_explosion:
+                            upgrade.se_supprimer()
+
                 if "M" in self.grille[coord_explosion[0]][coord_explosion[1]]:
                     for mur in self.dic_jeu["murs"]:
                         if mur.pos == coord_explosion:
                             mur.se_supprimer()
                             self.dic_jeu["bomber"].score += 10
-                            
-                            number = random.randint(0,32)
-                            
+
+                            number = random.randint(0, 32)
+
                             if number % 3 == 0:
-                               
-                                self.dic_jeu["upgrades"].append(Upgrade(self.g, self.grille, self.dic_jeu, coord_explosion, "U"))
-
-
-                if "P" in self.grille[coord_explosion[0]][coord_explosion[1]]:
-                    self.dic_jeu["bomber"].pv -= 1
+                                self.dic_jeu["upgrades"].append(
+                                    Upgrade(self.g, self.grille, self.dic_jeu, coord_explosion, "U"))
 
                 if "F" in self.grille[coord_explosion[0]][coord_explosion[1]]:
 
                     for fantome in self.dic_jeu["fantomes"]:
                         if fantome.pos == coord_explosion:
                             fantome.se_supprimer()
-                        self.dic_jeu["bomber"].score += 30
-                        self.dic_jeu["upgrades"].append(
-                            Upgrade(self.g, self.grille, self.dic_jeu, coord_explosion, "U"))
-
-                if "U" in self.grille[coord_explosion[0]][coord_explosion[1]]:
-                    for upgrade in self.dic_jeu["upgrades"]:
-                        if upgrade.pos == coord_explosion and upgrade.immune < 0:
-                            upgrade.se_supprimer()
+                            self.dic_jeu["bomber"].score += 30
+                            self.dic_jeu["upgrades"].append(
+                                Upgrade(self.g, self.grille, self.dic_jeu, coord_explosion, "U"))
 
                 if "B" in self.grille[coord_explosion[0]][coord_explosion[1]]:
                     for bombe in self.dic_jeu["bombes"]:
