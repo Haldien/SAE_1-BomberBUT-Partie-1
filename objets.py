@@ -220,7 +220,7 @@ class Upgrade(Entite):
 
         # Partie graphique
         self.sprite = "asset/upgrade/upgrade.png"
-        self.immune = 3
+        self.immune = 1
 
         self.objet_graphique = self.g.afficherImage(self.pos[1] * dic_jeu["case_dimensions"][0],
                                                     self.pos[0] * dic_jeu["case_dimensions"][1],
@@ -283,9 +283,9 @@ class Bombe(Entite):
                             self.dic_jeu["bomber"].score += 10
                             
                             number = random.randint(0,32)
-                            print(number)
+                            
                             if number % 3 == 0:
-                                print("une bombe a été ajouté")
+                               
                                 self.dic_jeu["upgrades"].append(Upgrade(self.g, self.grille, self.dic_jeu, coord_explosion, "U"))
 
 
@@ -421,10 +421,18 @@ class Bomber(Personnage):
             Cette méthode prend en paramètre un dictionnaire settings, qui reprend les paramètres du jeu actuelle
             Elle fait la gestion des niveaux du bomber
         """
-        self.niv += 1
+        option = int(get_vanilla())
+
+        if option == 0  :
+            self.niv += 1
+        else:
+            if self.niv < 5:
+                self.niv += 1
+
+
         if self.niv in [1, 3, 5, 7, 11, 13]:
             self.pv += 1
-        else:
+        elif option == 0:
             number = random.randint(0,10)
             if number == 5:
                 self.pv += 1
@@ -432,6 +440,16 @@ class Bomber(Personnage):
                 settings["timer"] += 10
             else:
                 settings["timer_fantome"] += 5
+    
+    def set_attr(self, score:int, niv:int, pv:int) -> None:
+        """
+            Cette fonction permet de réaffecter chaque valeur de la partie précédente à la nouvelle
+            Cette fonction est utile dans le cas du mode sans-fin
+            Elle prend en paramètre
+        """
+        self.score = score
+        self.niv = niv
+        self.pv = pv
             
 
 
