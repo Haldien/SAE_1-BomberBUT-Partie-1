@@ -282,11 +282,11 @@ def choice_size(g:Canevas) -> None:
             del text_row
             del text_column
             data = (0, 0, "RANDOM", 3)
-            endless = {"endless": 1, "score" : 0, "niv": 0, "pv": 3 }
+            mode = {"endless": 1, "score" : 0, "niv": 0, "pv": 3 }
             while data[3] > 0:
-                data = main(g, row = row, column=column, mode = endless)
+                data = main(g, row = row, column=column, mode_jeu = mode)
                 score, niv, mode, pv = data
-                endless = {"endless": 1, "score" : score, "niv": niv, "pv": pv }
+                mode = {"endless": 1, "score" : score, "niv": niv, "pv": pv }
             nouveau_score(g, score, niv, "ENDLESS_RANDOM", pv)
             return
      
