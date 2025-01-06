@@ -106,7 +106,6 @@ def updater_timers(dic_jeu:dict, game_settings:dict, default_game_settings:dict)
     """
     updater_timers_bombes(dic_jeu)
     updater_timers_game_settings(game_settings, default_game_settings)
-    updater_timers_upgrades(dic_jeu)
     updater_timer_ethernet(dic_jeu)
 """
 ===============================================================================================
@@ -196,8 +195,8 @@ def main(g:Canevas, carte: str= "", row:int = 5, column:int = 5, mode_jeu:dict =
 
 
                 # Affichage pour tester
-                # affichage_grille(grille)
-                # affichage_dic_jeu(dic_jeu)
+                affichage_grille(grille)
+                affichage_dic_jeu(dic_jeu)
                 # affichage_game_settings(game_settings)
 
     score = dic_jeu["bomber"].score
