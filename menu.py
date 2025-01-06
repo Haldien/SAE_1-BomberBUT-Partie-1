@@ -104,7 +104,7 @@ def supprime_elem(g, element:dict) -> None:
     del element["bouton"]
  
 
-def create_text_menu(g:Canevas) -> None:
+def create_text_menu(g:Canevas) -> dict:
         """
             Cette fonction prend en paramètre une fenêtre graphique
             Elle affiche tout les boutons et textes du menu principal
@@ -161,10 +161,10 @@ def menu(g:Canevas, carte: str = "") -> None:
         g.update()
     g.fermerFenetre()
 
-def create_mode(g:Canevas) -> list:
+def create_mode(g:Canevas) -> dict:
     """
         Cette fonction permet de créer les boutons et textes graphiques sur la fenêtre de choix de mode
-        Elle renvoie une liste d'objet graphique
+        Elle renvoie un dictionnaire d'objet graphique
     """
     enonce = g.afficherTexte("Quel mode de jeu ?", fenetre_dimensions[0]//2, fenetre_dimensions[1]//2-100, taille=25, newWeight="bold")
     aleatoire = Button(g, fenetre_dimensions[0]//3, fenetre_dimensions[1]//2+200, "ALEATOIRE")
@@ -225,7 +225,7 @@ def create_choice_size(g:Canevas) -> dict:
     }
     return dic_graphique
 
-def choice_size(g:Canevas):
+def choice_size(g:Canevas) -> None:
     """
         Cette fonction permet de créer une fenêtre qui permet au joueur de choisir la taille de la grille qu'il souhaite générer
     """
